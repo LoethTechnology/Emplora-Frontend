@@ -10,10 +10,11 @@ To get a local copy up and running, follow these steps:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/emplora-frontend.git
+   git clone git@github.com:LoethTechnology/Emplora-Frontend.git
    ```
 2. **Install dependencies:**
    ```bash
+   cd Emplora-Frontend/
    npm install
    ```
 3. **Run the development server:**
