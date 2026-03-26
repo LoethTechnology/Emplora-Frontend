@@ -7,7 +7,7 @@ import SignInBtn from "../buttons/signInBtn";
 const Navbar = () => {
     return(
         <Fragment> 
-            <nav className="border-b-[1px] border-b-[#f3f3f3] border-mil-border sticky top-0 z-50 bg-[white]"> 
+            <nav className="border-b border-b-[#f3f3f3] border-mil-border sticky top-0 z-50 bg-[white]"> 
                 <nav className="mx-auto px-6 py-4 flex items-center justify-between">
                     {/* Logo and header */}
                     <div> 
