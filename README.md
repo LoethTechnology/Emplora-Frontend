@@ -68,7 +68,7 @@ Check the GitHub Issues or the MVP document in the `docs/` folder to see what ne
 
 ### 2. Branching Strategy
 - Always create a new branch from `dev` for your features or fixes.
-- Use descriptive names: `feature/add-login-validation` or `fix/navbar-mobile-padding`.
+- Use descriptive names: `feature/add-login-validation` or `fix/navbar-mobile-padding`..
 
 ### 3. Coding Standards
 - **Consistency:** Follow the existing project structure and naming conventions.
