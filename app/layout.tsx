@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Emplora",
-  description: "Emplora desc"
+  description: "An open-source platform for reviewing and rating employers in Nigeria."
 };
 
 // Exporting the root layout 
