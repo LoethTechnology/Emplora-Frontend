@@ -56,7 +56,7 @@ const Home = () => {
                 <Image src={searchLogo} alt="Search Logo" width={20} height={20} className="mr-3" /> 
                 <input 
                   type="search" 
-                  placeholder="Search for companies..." 
+                  placeholder="Search for companies...." 
                   className="w-full outline-none bg-transparent text-gray-700"
                 />
               </div>
