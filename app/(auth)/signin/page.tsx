@@ -2,14 +2,14 @@
 import { Fragment } from 'react'; 
 
 // Creating the login component
-const Login = () => {
+const Signin = () => {
     // Rendering the component 
     return (
         <Fragment> 
-            <p> Login Page </p>
+            <p> Signin Page </p>
         </Fragment>
     )
 }
 
 // Exporting the login page 
-export default Login; 
+export default Signin; 

@@ -4,4 +4,22 @@ body {
   margin: 0px;
   box-sizing: border-box;
   background-color: white;
+  color: #727272; 
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-slide {
+  animation: slide 20s linear infinite;
+}
+
+.animate-slide:hover {
+  animation-play-state: paused;
 }
