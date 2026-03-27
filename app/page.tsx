@@ -52,9 +52,7 @@ const Home = () => {
                 Find your preferred Company
               </h2>
             </div>
-            
-
-            
+        
             <div className="w-full lg:flex items-center"> 
               {/* Container for the icon and input */}
               <div className="mr-3.75 flex items-center w-full border border-gray-300 rounded-md px-3 py-4 focus-within:ring-2 focus-within:ring-[#334EAC] focus-within:border-transparent h-12.5"> 
@@ -69,12 +67,6 @@ const Home = () => {
                 <button className="w-[40%] lg:w-auto text-[white] h-[50px] text-[15px] bg-[#334EAC] pl-[30px] pr-[30px] rounded-[5px] hover:bg-[#1e2e6b] transition-colors duration-1000 ease-in-out"> Search </button>
               </div>
             </div>
-
-
-
-
-
-
           </div>
         </section>
 
@@ -165,6 +157,8 @@ const Home = () => {
 
             </div>
         </section>
+
+        
 
 
 
