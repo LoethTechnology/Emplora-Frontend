@@ -18,7 +18,7 @@ const About = () => {
     <Fragment> 
         <main>
           {/* 1. Adding the Navbar */}
-          <Navbar />
+          <Navbar variant=""/>
           
           {/* 2. Hero Section */}
           <div className="relative">

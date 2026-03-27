@@ -12,12 +12,12 @@ const Home = () => {
   return (
     <Fragment> 
       {/* Adding the Navbar */}
-      <Navbar /> 
-      
+      <Navbar />
+
       {/* Adding the main div */}
       <main className="min-h-screen bg-white p-4 md:p-[30px] mb-90.5"> 
         {/* Header Div */}
-        <header className="grid justify-center content-center items-center text-center mt-12 md:mt-[80px]"> 
+        <header className="grid justify-center content-center items-center text-center mt-30 md:mt-[100px]"> 
           <div> 
             {/* Reduced text size for mobile (text-4xl) and scaled up for desktop (text-[62px]) */}
             <h2 className="text-4xl md:text-[62px] font-bold leading-tight md:leading-[70px] text-black"> 
