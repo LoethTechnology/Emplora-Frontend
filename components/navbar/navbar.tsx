@@ -3,8 +3,8 @@
 // Importing the necessary modules 
 import { Fragment, useState } from "react";
 import Link from "next/link";
-import RegisterBtn from "../buttons/registerBtn";
-import SignInBtn from "../buttons/signInBtn";
+import RegisterBtn from "@/components/buttons/registerBtn"
+import SignInBtn from "@/components/buttons/signInBtn";
 
 // Creating the navbar component
 const Navbar = () => {
