@@ -18,7 +18,7 @@ const About = () => {
     <Fragment> 
         <main>
           {/* 1. Adding the Navbar */}
-          <Navbar/>
+          <Navbar />
           
           {/* 2. Hero Section */}
           <div className="relative">
@@ -31,7 +31,7 @@ const About = () => {
                 className="object-cover"
                 priority // Added priority for LCP optimization
               />
-              <div className="text-white z-10 text-center">
+              <div className="text-white z-10 text-center pt-28">
                 <h1 className="font-semibold text-4xl">About Us</h1>
                 <p className="">Home | About Us</p>
               </div>
