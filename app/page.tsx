@@ -9,9 +9,6 @@ import textLogo from "@/images/home/home-text-logo.jpg";
  
 // Creating the home component
 const Home = () => {
-  // Create an array to represent your reviews
-  const reviewData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-
   return (
     <Fragment> 
       {/* Adding the Navbar */}
@@ -52,13 +49,15 @@ const Home = () => {
           <div className="w-full flex flex-col justify-center"> 
             <div className="mb-4"> 
               <h2 className="text-[18px]"> 
-                <strong> Find your preferred Company </strong> 
+                Find your preferred Company
               </h2>
             </div>
             
-            <div className="w-full flex items-center"> 
+
+            
+            <div className="w-full lg:flex items-center"> 
               {/* Container for the icon and input */}
-              <div className="mr-[15px] flex items-center w-full border border-gray-300 rounded-md px-3 py-4 focus-within:ring-2 focus-within:ring-[#334EAC] focus-within:border-transparent"> 
+              <div className="mr-3.75 flex items-center w-full border border-gray-300 rounded-md px-3 py-4 focus-within:ring-2 focus-within:ring-[#334EAC] focus-within:border-transparent h-12.5"> 
                 <Image src={searchLogo} alt="Search Logo" width={20} height={20} className="mr-3" /> 
                 <input 
                   type="search" 
@@ -66,10 +65,16 @@ const Home = () => {
                   className="w-full outline-none bg-transparent text-gray-700"
                 />
               </div>
-              <div> 
-                <button className="text-[white] h-[50px] text-[15px] bg-[#334EAC] pl-[30px] pr-[30px] rounded-[5px] hover:bg-[#1e2e6b] transition-colors duration-1000 ease-in-out"> Search </button>
+              <div className="mt-[15px] lg:mt-0"> 
+                <button className="w-[40%] lg:w-auto text-[white] h-[50px] text-[15px] bg-[#334EAC] pl-[30px] pr-[30px] rounded-[5px] hover:bg-[#1e2e6b] transition-colors duration-1000 ease-in-out"> Search </button>
               </div>
             </div>
+
+
+
+
+
+
           </div>
         </section>
 
@@ -131,17 +136,15 @@ const Home = () => {
 
         {/*  Reviews component display */}
         <section className="m-auto w-[90%] mt-[25px] px-4 md:px-[50px] py-10 overflow-hidden flex flex-nowrap gap-6 scrollbar-hide snap-x snap-mandatory">
-          <div className="flex animate-slide gap-5 whitespace-normal">
-            {[...Array(10)].map((_, i) => (
-              <div key={i} className="flex-shrink-0 snap-center">
+          <div className="flex animate-slide gap-5">
+            {/* First set */}
+            {[...Array(6)].map((_, i) => (
+              <div key={`a-${i}`} className="flex-shrink-0 w-[300px]">
                 <Reviews />
               </div>
             ))}
           </div>
         </section>
-
-
-
 
         {/* Write a review section */}
         <section className="mt-12 md:mt-5"> 
@@ -149,7 +152,7 @@ const Home = () => {
               
               {/* Header Container */}
               <div className="mb-4"> 
-                <h1 className="text-center text-[26px] md:text-[26px] leading-[30px] text-[#727272]">
+                <h1 className="text-center text-[20px] md:text-[20px] leading-[30px] text-[#727272]">
                   Rate your experience and describe the work environment, management, salary <br /> 
                   and growth opportunities. 
                 </h1>
@@ -162,6 +165,9 @@ const Home = () => {
 
             </div>
         </section>
+
+
+
 
 
  

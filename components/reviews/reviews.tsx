@@ -8,7 +8,7 @@ import companyLogo from "@/images/home/review-company-logo.png"
 const Reviews = () => {
   return (
     <Fragment> 
-        <section className="w-[369px] h-[185px] p-5 overflow-y-auto border border-gray-200 rounded-lg bg-white">
+        <section className="w-[300px] min-h-[185px] p-5 border border-gray-200 rounded-lg bg-white">
             <div className="flex justify-between"> 
                 <div> 
                     <Image src={starLogo} alt="Star Logo" /> 
