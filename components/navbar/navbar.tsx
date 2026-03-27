@@ -18,10 +18,10 @@ const Navbar = ({ variant = "default" }) => {
   return (
     <Fragment>
       <nav
-        className={`w-full z-50 
+        className={`w-full z-50 transition-all duration-300 
   ${
     variant === "overlay"
-      ? "absolute top-0 left-0 bg-transparent border-none text-white"
+      ? "sticky top-0 bg-transparent text-white"
       : "sticky top-0 bg-white border-b border-[#f3f3f3] text-black"
   }`}
       >
@@ -44,7 +44,7 @@ const Navbar = ({ variant = "default" }) => {
               href="/"
               className={`transition-colors ${
                 variant === "overlay"
-                  ? "text-black hover:text-blue-200"
+                  ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
               }`}
             >
@@ -54,7 +54,7 @@ const Navbar = ({ variant = "default" }) => {
               href="/about"
               className={`transition-colors ${
                 variant === "overlay"
-                  ? "text-black hover:text-blue-200"
+                  ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
               }`}
             >
@@ -64,7 +64,7 @@ const Navbar = ({ variant = "default" }) => {
               href="/companyReviews"
               className={`transition-colors ${
                 variant === "overlay"
-                  ? "text-black hover:text-blue-200"
+                  ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
               }`}
             >
@@ -74,7 +74,7 @@ const Navbar = ({ variant = "default" }) => {
               href="/contact"
               className={`transition-colors ${
                 variant === "overlay"
-                  ? "text-black hover:text-blue-200"
+                  ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
               }`}
             >
