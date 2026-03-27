@@ -82,22 +82,18 @@ const Navbar = () => {
                             <Link href="/contact" onClick={toggleMenu} className="hover:text-[#334EAC]">Contact Us</Link>
                         </nav>
 
-                        <div className="mt-auto pb-10 flex flex-col gap-4">
+                        <div className="mt-auto pb-10 flex flex-col gap-4 text-lg font-medium text-gray-700">
                             {/* Creating the link url button for signIn */}
                             <div> 
-                                <Link href="/signin"> 
-                                    <button className="w-[100%] h-[50px] text-[15px] text-[#334EAC] border-[1px] border-[#334EAC] pl-[30px] pr-[30px] rounded-[5px]"> 
-                                        Sign In
-                                    </button>
+                                <Link href="/signin" className="hover:text-[#334EAC]"> 
+                                    Sign In
                                 </Link>
                             </div>
                             {/* Adding the register button */}
                             <div> 
                                 {/* Creating the link url button for register */}
                                 <Link href="/register">
-                                    <button className="w-[100%] text-white h-[50px] text-[15px] bg-[#334EAC] px-[30px] rounded-[5px] hover:bg-[#1e2e6b] transition-colors duration-1000 ease-in-out"> 
-                                        Register
-                                    </button>
+                                    Register 
                                 </Link>
                             </div>
                         </div>

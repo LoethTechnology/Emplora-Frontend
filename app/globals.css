@@ -26,3 +26,7 @@ body {
 .animate-slide:hover {
   animation-play-state: paused;
 }
+
+nextjs-portal {
+  display: none !important;
+}
