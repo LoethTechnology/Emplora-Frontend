@@ -88,7 +88,7 @@ const About = () => {
             </div>
           </section>
 
-          <section className="p-20 ">
+          <section className="p-5 md:p-20 mb-25">
             <div className="flex flex-col items-center justify-center">
               <SectionBadge text="Why Choose Us" />
               <h2 className="text-black font-semibold text-3xl">Why Emplora?</h2>
