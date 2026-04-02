@@ -68,7 +68,7 @@ const Navbar = ({ variant = "default" }) => {
                   : "text-black hover:text-[#334EAC]"
               }`}
             >
-              Company Reviews
+              Search Company 
             </Link>
             <Link
               href="/contact"
@@ -156,7 +156,7 @@ const Navbar = ({ variant = "default" }) => {
                 onClick={toggleMenu}
                 className="hover:text-[#334EAC]"
               >
-                Company Reviews
+                Search Company 
               </Link>
               <Link
                 href="/contact"
