@@ -21,8 +21,8 @@ const Navbar = ({ variant = "default" }) => {
         className={`w-full z-50 transition-all duration-300 
   ${
     variant === "overlay"
-      ? "absolute top-0 bg-transparent border-none text-white"
-      : "absolute top-0 bg-transparent border-none text-black"
+      ? "top-0 bg-transparent border-none text-white sticky"
+      : "top-0 bg-transparent border-none text-black sticky"
   }`}
       >
         <div className="mx-auto px-6 py-4 flex items-center justify-between">
