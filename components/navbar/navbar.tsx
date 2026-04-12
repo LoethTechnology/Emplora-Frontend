@@ -1,7 +1,7 @@
 "use client";
 
 // Importing the necessary modules
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import RegisterBtn from "@/components/buttons/registerBtn";
 import SignInBtn from "@/components/buttons/signInBtn";
@@ -10,6 +10,25 @@ import SignInBtn from "@/components/buttons/signInBtn";
 const Navbar = ({ variant = "default" }) => {
   // Setting the states
   const [isOpen, setIsOpen] = useState(false);
+  const [atTop, setAtTop] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScroll = window.scrollY;
+      if (currentScroll === 0) {
+        // if statement to check if we are at the top of the page or not.
+        setAtTop(true);
+      } else {
+        setAtTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   // Creating a function to handle the menu
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -21,9 +40,9 @@ const Navbar = ({ variant = "default" }) => {
         className={`w-full z-50 transition-all duration-300 
   ${
     variant === "overlay"
-      ? "top-0 bg-transparent border-none text-white sticky"
-      : "top-0 bg-transparent border-none text-black sticky"
-  }`}
+      ? "top-0 bg-white border-none text-white sticky"
+      : "top-0 bg-white border-none text-black sticky"
+  } ${!atTop && variant !== "overlay" ? "bg-white/60 backdrop-blur-xs shadow-md" : ""}`}
       >
         <div className="mx-auto px-6 py-4 flex items-center justify-between">
           {/* 1. Logo Section */}
@@ -68,7 +87,7 @@ const Navbar = ({ variant = "default" }) => {
                   : "text-black hover:text-[#334EAC]"
               }`}
             >
-              Search Company 
+              Search Company
             </Link>
             <Link
               href="/contact"
@@ -156,7 +175,7 @@ const Navbar = ({ variant = "default" }) => {
                 onClick={toggleMenu}
                 className="hover:text-[#334EAC]"
               >
-                Search Company 
+                Search Company
               </Link>
               <Link
                 href="/contact"
