@@ -24,8 +24,8 @@ const Signin = () => {
                     <div className="flex flex-col justify-center h-full px-6 pt-30">
                         {/* Header div */}
                         <div className="text-center mb-[20px]">
-                            <h2 className="font-bold text-black text-2xl"> Welcome Back </h2>
-                            <p> Kindly enter the correct details to sign in to your account. </p>
+                            <h2 className="font-bold text-black text-2xl"> Welcome Back 👋 </h2>
+                            <p className="mt-[4px]"> Kindly enter the correct details to sign in to your account. </p>
                         </div>
 
                         {/* Email div */}
@@ -112,7 +112,7 @@ const Signin = () => {
                                 </Link>
                             </div>
                             <div>
-                                &copy; Emplore. All rights reserved
+                                &copy; Emplora. All rights reserved
                             </div>
 
                         </div>
