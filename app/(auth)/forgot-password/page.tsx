@@ -11,7 +11,7 @@ export default function ForgotPasswordPage() {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // ✅ FIXED: added "reset"
+
   const [step, setStep] = useState<"email" | "otp" | "reset">("email");
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="w-full flex rounded-xl overflow-hidden">
         {/* LEFT */}
-        <div className="hidden md:block relative shrink-0 rounded-xl overflow-hidden w-[50%] h-[100vh]">
+        <div className="hidden md:block relative shrink-0 rounded-xl overflow-hidden w-[50%] h-[95vh]">
           <Image
             src={forgotImage}
             alt="Forgot password visual"
@@ -65,7 +65,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         {/* RIGHT */}
-        <div className="flex-1 flex flex-col justify-between px-10 py-12 bg-white">
+        <div className="flex-1 flex flex-col justify-between px-10 py-12 ">
           <div />
 
           <div className="w-full max-w-85 mx-auto">
