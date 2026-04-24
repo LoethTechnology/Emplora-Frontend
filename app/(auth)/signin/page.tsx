@@ -80,7 +80,7 @@ const Signin = () => {
                         </div>
 
                         <div className="mt-2">
-                            <Link href="/forgotPassword" className="text-[13px] text-[#334EAC] font-bold float-right">
+                            <Link href="/forgot-password" className="text-[13px] text-[#334EAC] font-bold float-right">
                                 Forgot password
                             </Link>
                         </div>
