@@ -22,7 +22,7 @@ const Signin = () => {
             <main className="p-4 pt-2.5 flex justify-center">
                 {/* Adding the left section - Hidden on mobile, block on large screens */}
                 <section className="hidden lg:block lg:w-1/2 h-[97vh]">
-                    <Image src={signinLogo} className="h-full w-full object-cover rounded-[7px]" alt="signLogo" />
+                    <Image src={signinLogo} className="h-full w-full rounded-[7px]" alt="signLogo" />
                 </section>
 
                 {/* Adding the right section */}
