@@ -53,12 +53,12 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="w-full flex rounded-xl overflow-hidden">
         {/* LEFT */}
-        <div className="hidden md:block relative shrink-0 rounded-xl overflow-hidden w-[35%] min-h-172.5">
+        <div className="hidden md:block relative shrink-0 rounded-xl overflow-hidden w-[50%] h-[100vh]">
           <Image
             src={forgotImage}
             alt="Forgot password visual"
             fill
-            className="object-cover"
+            className="h-full"
             priority
           />
           <div className="absolute inset-0 bg-[#263B81]/30 rounded-xl" />
