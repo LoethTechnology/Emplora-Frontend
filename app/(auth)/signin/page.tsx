@@ -73,15 +73,15 @@ const Signin = () => {
                         </div>
 
                         {/* Forgot Password div */}
-                        <div className="float-right">
+                        <div className="">
                             <Link
                                 href="/forgotPassword"
-                                className="text-[13px] text-[#334EAC] font-bold"
+                                className="text-[13px] text-[#334EAC] font-bold float-right"
                             > Forgot password </Link>
                         </div>
 
                         {/* Remeber me div */}
-                        <div className='items-end flex place-items-center gap-x-0.5 mt-[35px]'>
+                        <div className='items-left flex place-items-center gap-x-0.5 mt-[35px]'>
                             <div>
                                 <input type="checkbox" className="accent-blue-600 h-4 w-4" />
                             </div>
