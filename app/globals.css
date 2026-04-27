@@ -2,15 +2,17 @@
 
 body {
   margin: 0px;
+  padding: 0px;
   box-sizing: border-box;
   background-color: white;
-  color: #727272; 
+  color: #727272;
 }
 
 @keyframes slide {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
