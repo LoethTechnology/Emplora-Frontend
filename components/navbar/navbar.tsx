@@ -11,7 +11,8 @@ const Navbar = ({ variant = "default" }) => {
   // Setting the states
   const [isOpen, setIsOpen] = useState(false);
   const [atTop, setAtTop] = useState(true);
-
+  const [isVisible, setIsVisible] = useState(true);
+   let lastScrollTop = 0;
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
@@ -20,6 +21,12 @@ const Navbar = ({ variant = "default" }) => {
         setAtTop(true);
       } else {
         setAtTop(false);
+        if (currentScroll > lastScrollTop) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // this line determines if the scroll is going up or down
       }
     };
 
@@ -32,6 +39,7 @@ const Navbar = ({ variant = "default" }) => {
 
   // Creating a function to handle the menu
   const toggleMenu = () => setIsOpen(!isOpen);
+  const headerIsvisible = !isVisible ? "top-[-200px]" : "top-0";
 
   // Rendering the navbar component
   return (
@@ -42,7 +50,7 @@ const Navbar = ({ variant = "default" }) => {
     variant === "overlay"
       ? "top-0 bg-white border-none text-white sticky"
       : "top-0 bg-white border-none text-black sticky"
-  } ${!atTop && variant !== "overlay" ? "bg-white/60 backdrop-blur-xs shadow-md" : ""}`}
+  } ${!atTop && variant !== "overlay" ? `bg-white/60 backdrop-blur-xs shadow-md ${headerIsvisible}` : ""}`}
       >
         <div className="mx-auto px-6 py-4 flex items-center justify-between">
           {/* 1. Logo Section */}
