@@ -61,14 +61,14 @@ const Navbar = ({ variant = "default" }) => {
               About Us
             </Link>
             <Link
-              href="/companyReviews"
+              href="/search-company"
               className={`transition-colors ${
                 variant === "overlay"
                   ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
               }`}
             >
-              Search Company 
+              Search Company
             </Link>
             <Link
               href="/contact"
@@ -156,7 +156,7 @@ const Navbar = ({ variant = "default" }) => {
                 onClick={toggleMenu}
                 className="hover:text-[#334EAC]"
               >
-                Search Company 
+                Search Company
               </Link>
               <Link
                 href="/contact"
