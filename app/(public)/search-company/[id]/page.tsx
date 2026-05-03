@@ -121,11 +121,11 @@ const CompanyProfile = () => {
           alt="company image"
           className="object-cover w-full"
         />
-        <BackButton className="absolute top-5 left-10 " />
-        <FavoriteBtn className="absolute top-5 right-10 " />
+        <BackButton className="absolute md:top-5 md:left-10 top-2 left-5" />
+        <FavoriteBtn className="absolute md:top-5 md:right-10 top-2 right-5" />
       </div>
 
-      <div className="w-[80%] mx-auto flex flex-col gap-6">
+      <div className="md:w-[80%] mx-auto flex flex-col gap-6">
         <ProfileHeader
           img={companyProfile}
           name={dummyData.name}
@@ -133,9 +133,9 @@ const CompanyProfile = () => {
           location={dummyData.location}
         />
 
-        <div className="w-full flex gap-5">
+        <div className="w-full flex gap-5 flex-col md:flex-row px-2">
           {/* tab sections */}
-          <Tabs className="w-2/3">
+          <Tabs className="md:w-2/3 w-full">
             <TabsList
               className="gap-4"
               variant={"line"}
@@ -183,7 +183,7 @@ const CompanyProfile = () => {
               <p className="text-text-primary pb-2 font-medium text-xl">
                 Summary
               </p>
-              <p>{dummyData.summary}</p>
+              <p className="max-w-pro">{dummyData.summary}</p>
             </div>
 
             {/*Reviews*/}
@@ -204,9 +204,9 @@ const CompanyProfile = () => {
           </Tabs>
 
           {/*Left section*/}
-          <div className="w-1/3 flex flex-col gap-5">
+          <div className="md:w-1/3 w-full flex flex-col gap-5">
             {/*Latest Jobs*/}
-            <div className="border border-custom-border rounded-xl py-4 px-3.5">
+            <div className="border border-custom-border rounded-xl py-4 px-3.5 ">
               <p className="text-text-primary pb-2">Latest Jobs</p>
               {dummyData.latestJobs.map((job) => (
                 <div className="border-t border-custom-border py-2">
@@ -248,9 +248,9 @@ const CompanyProfile = () => {
                   {dummyData.organizationDetails.industry}
                 </p>
               </div>
-              <div className="border-custom-border py-2 flex justify-between">
+              <div className="border-custom-border py-2 flex justify-between gap-2">
                 <p>Founders</p>
-                <div className="flex gap-1">
+                <div className="flex gap-1 flex-col lg:flex-row">
                   {dummyData.organizationDetails.Founders.map((founder) => (
                     <p className="text-text-primary">{founder},</p>
                   ))}
