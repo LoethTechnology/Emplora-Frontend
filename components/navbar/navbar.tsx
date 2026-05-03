@@ -88,7 +88,7 @@ const Navbar = ({ variant = "default" }) => {
               About Us
             </Link>
             <Link
-              href="/companyReviews"
+              href="/search-company"
               className={`transition-colors ${
                 variant === "overlay"
                   ? "text-white hover:text-blue-200"
