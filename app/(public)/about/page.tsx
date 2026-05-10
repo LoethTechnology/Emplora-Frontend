@@ -24,7 +24,7 @@ const About = () => {
             className="object-cover"
           />
           <div className="text-white">
-            <h1 className="relative z-10 font-semibold text-4xl">About Us</h1>
+            <h1 className="relative z-10 font-semibold text-[50px]">About Us</h1>
             <p className="relative text-center">Home | About Us</p>
           </div>
         </div>
@@ -80,13 +80,13 @@ const About = () => {
         <div className="flex flex-col items-center justify-center">
           <SectionBadge text="Why Choose Us" />
           <h2 className="text-black font-semibold text-3xl">Why Emplora?</h2>
-          
+
           <div className="flex flex-col md:flex-row gap-4 pt-12">
-            <WhyCard image={image2} text="Real experience empower people with knowledge and create a more transparent job ecosystem."/>
-            <WhyCard image={image3} text="Transparency builds better workplaces by encouraging trust accountability and open communication."/>
-            <WhyCard image={image4} text="Your voice can help someone choose better and help them take a step towards a more fulfilling career."/>
-           
-            
+            <WhyCard image={image2} text="Real experience empower people with knowledge and create a more transparent job ecosystem." />
+            <WhyCard image={image3} text="Transparency builds better workplaces by encouraging trust accountability and open communication." />
+            <WhyCard image={image4} text="Your voice can help someone choose better and help them take a step towards a more fulfilling career." />
+
+
           </div>
         </div>
       </section>
