@@ -3,11 +3,11 @@ import Image from "next/image";
 import companyProfile from "@/images/company/companyProfile.png";
 import BackButton from "@/components/buttons/BackBtn";
 import FavoriteBtn from "@/components/buttons/FavoriteBtn";
-import ProfileHeader from "../components/ProfileHeader";
+import ProfileHeader from "../../../../components/searchCompany/ProfileHeader";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReactNode } from "react";
 import { MessageCircleMore, Star, UsersRound } from "lucide-react";
-import ReviewCard from "../components/ReviewCard";
+import ReviewCard from "../../../../components/searchCompany/ReviewCard";
 
 const dummyData = {
   name: "TechNova Solutions",
