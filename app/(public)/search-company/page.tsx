@@ -17,7 +17,7 @@ const SearchCompany = () => {
             {/* Adding the main div */}
             <main className="h-[100vh] w-full">
                 {/* Search company hero section */}
-                <div className="flex items-center justify-center relative w-full lg:h-101">
+                <div className="h-101 flex items-center justify-center relative w-full lg:h-101">
                     <Image
                         src={searchCompanyLogo}
                         alt="Search Company Hero Logo"
@@ -26,7 +26,7 @@ const SearchCompany = () => {
                     />
                     <div className="flex justify-center flex-col align-middle relative z-10 text-center px-4 sm:px-6">
                         <div>
-                            <h1 className="sm:text-4xl md:text-[56px] lg:text-[56px] text-white font-bold mb-4"> Search Company </h1>
+                            <h1 className="text-[40px] md:text-[56px] lg:text-[56px] text-white font-bold mb-4"> Search Company </h1>
                         </div>
                         <div className="relative flex justify-center text-[white]">
                             <Link href="/" className="hover:text-gray-300 transition-colors"> Home </Link>
@@ -38,7 +38,7 @@ const SearchCompany = () => {
 
                 {/* Discover and explore companies div */}
                 <div className="flex justify-center text-black mt-[40px] mb-[45px]">
-                    <h2 className="text-[32px]"> Discover and explore companies </h2>
+                    <h2 className="text-[19px] sm:text-[32px] lg:text-[32px]"> Discover and explore companies </h2>
                 </div>
 
                 {/* Location, Search, and Filter div */}
