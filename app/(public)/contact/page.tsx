@@ -95,7 +95,7 @@ const ContactPage = () => {
                 Get In Touch
               </h3>
               <p className="text-sm sm:text-base md:text-lg text-[#727272] mt-4 leading-relaxed">
-                We&apos;d love to hear from you. Whether you have a question, feedback, or need support, 
+                We&apos;d love to hear from you. Whether you have a question, feedback, or need support,
                 our team is here to help. Feel free to reach out to us for:
               </p>
               <ul className="text-[#727272] text-sm sm:text-base md:text-lg mt-4 list-disc list-inside space-y-2">
