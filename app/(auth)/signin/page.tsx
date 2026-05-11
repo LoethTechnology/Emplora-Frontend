@@ -163,7 +163,7 @@ const Signin = () => {
             <div className="text-center text-[15px] text-[#9e9d9d]">
               <p>
                 {" "}
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link href="/register" className="text-[#334EAC]">
                   {" "}
                   Create an account{" "}
