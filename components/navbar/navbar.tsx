@@ -12,7 +12,7 @@ const Navbar = ({ variant = "default" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [atTop, setAtTop] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
-   let lastScrollTop = 0;
+  let lastScrollTop = 0;
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
@@ -22,11 +22,11 @@ const Navbar = ({ variant = "default" }) => {
       } else {
         setAtTop(false);
         if (currentScroll > lastScrollTop) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
-      lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // this line determines if the scroll is going up or down
+          setIsVisible(false);
+        } else {
+          setIsVisible(true);
+        }
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // this line determines if the scroll is going up or down
       }
     };
 
@@ -46,20 +46,18 @@ const Navbar = ({ variant = "default" }) => {
     <Fragment>
       <nav
         className={`w-full z-50 transition-all duration-300 
-  ${
-    variant === "overlay"
-      ? "top-0 bg-white border-none text-white sticky"
-      : "top-0 bg-white border-none text-black sticky"
-  } ${!atTop && variant !== "overlay" ? `bg-white/60 backdrop-blur-xs shadow-md ${headerIsvisible}` : ""}`}
+  ${variant === "overlay"
+            ? "top-0 bg-white border-none text-white sticky"
+            : "top-0 bg-white border-none text-black sticky"
+          } ${!atTop && variant !== "overlay" ? `bg-white/60 backdrop-blur-xs shadow-md ${headerIsvisible}` : ""}`}
       >
         <div className="mx-auto px-6 py-4 flex items-center justify-between">
           {/* 1. Logo Section */}
           <div className="shrink-0">
             <Link
               href="/"
-              className={`text-[24px] md:text-[30px] ${
-                variant === "overlay" ? "text-white" : "text-[#000000bd]"
-              }`}
+              className={`text-[24px] md:text-[30px] ${variant === "overlay" ? "text-white" : "text-[#000000bd]"
+                }`}
             >
               Emplora
             </Link>
@@ -69,41 +67,37 @@ const Navbar = ({ variant = "default" }) => {
           <div className="hidden min-[854px]:flex items-center justify-center gap-8 flex-1">
             <Link
               href="/"
-              className={`transition-colors ${
-                variant === "overlay"
+              className={`transition-colors ${variant === "overlay"
                   ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
-              }`}
+                }`}
             >
               Home
             </Link>
             <Link
               href="/about"
-              className={`transition-colors ${
-                variant === "overlay"
+              className={`transition-colors ${variant === "overlay"
                   ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
-              }`}
+                }`}
             >
               About Us
             </Link>
             <Link
               href="/search-company"
-              className={`transition-colors ${
-                variant === "overlay"
+              className={`transition-colors ${variant === "overlay"
                   ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
-              }`}
+                }`}
             >
               Search Company
             </Link>
             <Link
               href="/contact"
-              className={`transition-colors ${
-                variant === "overlay"
+              className={`transition-colors ${variant === "overlay"
                   ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
-              }`}
+                }`}
             >
               Contact Us
             </Link>
@@ -179,7 +173,7 @@ const Navbar = ({ variant = "default" }) => {
                 About Us
               </Link>
               <Link
-                href="/companyReviews"
+                href="/search-company"
                 onClick={toggleMenu}
                 className="hover:text-[#334EAC]"
               >

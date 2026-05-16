@@ -24,22 +24,22 @@ const Home = () => {
   // Setting the state 
   const [faqActiveMenu, setFaqActiveMenu] = useState("home");
 
-// Creating a function for rendering the faq questions and answer 
+  // Creating a function for rendering the faq questions and answer 
   const renderFaqMenu = () => {
     switch (faqActiveMenu) {
       case 'home':
         // Pass the props as attributes: name={value}
         return <FaqLoader faqActiveMenu="home" faqData={generalQuestions} />;
-      
+
       case 'reviewsAndRatings':
         return <FaqLoader faqActiveMenu="reviewsAndRatings" faqData={reviewAndRatings} />;
-        
+
       case 'privacyAndAnonymity':
         return <FaqLoader faqActiveMenu="privacyAndAnonymity" faqData={privacyAndAnonymity} />;
-        
+
       case 'companyInformation':
         return <FaqLoader faqActiveMenu="companyInformation" faqData={companyInformation} />;
-        
+
       default:
         return null;
     }
@@ -275,19 +275,10 @@ const Home = () => {
               <div className="space-y-4">
                 {renderFaqMenu()}
               </div>
-             
-
 
             </div>
           </div>
         </section>
-
-
-
-
-
-
-
 
       </main>
 
