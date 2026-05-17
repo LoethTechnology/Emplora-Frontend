@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Navbar from "@/components/navbar/navbar";
 import Image from "next/image";
 import companyProfile from "@/images/company/companyProfile.png";
@@ -6,8 +9,23 @@ import FavoriteBtn from "@/components/buttons/FavoriteBtn";
 import ProfileHeader from "../../../../components/searchCompany/ProfileHeader";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReactNode } from "react";
-import { MessageCircleMore, Star, UsersRound } from "lucide-react";
+import { ChevronDown, MessageCircleMore, Star, UsersRound } from "lucide-react";
 import ReviewCard from "../../../../components/searchCompany/ReviewCard";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+export type ReviewCategory =
+  | "all"
+  | "salary-benefits"
+  | "work-Environment"
+  | "career-growth"
+  | "management";
+
+type SortOrder = "asc" | "desc";
 
 const dummyData = {
   name: "TechNova Solutions",
@@ -28,6 +46,7 @@ const dummyData = {
       onUpVote: () => console.log("Upvote review 1"),
       onDownVote: () => console.log("Downvote review 1"),
       onComment: () => console.log("Comment on review 1"),
+      categories: ["salary-benefits", "work-Environment"],
     },
     {
       rating: 4.5,
@@ -40,6 +59,7 @@ const dummyData = {
       onUpVote: () => console.log("Upvote review 2"),
       onDownVote: () => console.log("Downvote review 2"),
       onComment: () => console.log("Comment on review 2"),
+      categories: ["salary-benefits", "career-growth"],
     },
     {
       rating: 3.0,
@@ -52,6 +72,7 @@ const dummyData = {
       onUpVote: () => console.log("Upvote review 3"),
       onDownVote: () => console.log("Downvote review 3"),
       onComment: () => console.log("Comment on review 3"),
+      categories: ["salary-benefits", "management"],
     },
     {
       rating: 2.5,
@@ -64,6 +85,7 @@ const dummyData = {
       onUpVote: () => console.log("Upvote review 4"),
       onDownVote: () => console.log("Downvote review 4"),
       onComment: () => console.log("Comment on review 4"),
+      categories: ["salary-benefits", "work-life balance"],
     },
     {
       rating: 1.0,
@@ -76,6 +98,7 @@ const dummyData = {
       onUpVote: () => console.log("Upvote review 5"),
       onDownVote: () => console.log("Downvote review 5"),
       onComment: () => console.log("Comment on review 5"),
+      categories: ["salary-benefits", "management"],
     },
   ],
   employees: 10,
@@ -95,6 +118,14 @@ const dummyData = {
   ],
 };
 
+const REVIEW_CATEGORIES: { value: ReviewCategory; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "salary-benefits", label: "Salary & Benefits" },
+  { value: "work-Environment", label: "Work Environment" },
+  { value: "management", label: "Management" },
+  { value: "career-growth", label: "Career Growth" },
+];
+
 const TopCards = ({
   icon,
   title,
@@ -112,6 +143,19 @@ const TopCards = ({
 );
 
 const CompanyProfile = () => {
+  const [activeCategory, setActiveCategory] = useState<ReviewCategory>("all");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+
+  const displayedReviews = dummyData.reviews
+    .filter((review) =>
+      activeCategory === "all"
+        ? true
+        : review.categories.includes(activeCategory),
+    )
+    .sort((a, b) =>
+      sortOrder === "desc" ? b.rating - a.rating : a.rating - b.rating,
+    );
+
   return (
     <div className="mb-20">
       <Navbar />
@@ -134,7 +178,6 @@ const CompanyProfile = () => {
         />
 
         <div className="w-full flex gap-5 flex-col md:flex-row px-2">
-          {/* tab sections */}
           <Tabs className="md:w-2/3 w-full">
             <TabsList
               className="gap-4"
@@ -143,23 +186,24 @@ const CompanyProfile = () => {
             >
               <TabsTrigger
                 value="overview"
-                className="cursor-pointer text-text-primary data-[state=active]:text-primary   data-[state=active]:after:bg-primary"
+                className="cursor-pointer text-text-primary data-[state=active]:text-primary data-[state=active]:after:bg-primary"
               >
                 Overview
               </TabsTrigger>
               <TabsTrigger
                 value="Summary"
-                className="cursor-pointer text-text-primary data-[state=active]:text-primary   data-[state=active]:after:bg-primary"
+                className="cursor-pointer text-text-primary data-[state=active]:text-primary data-[state=active]:after:bg-primary"
               >
                 Summary
               </TabsTrigger>
               <TabsTrigger
                 value="Reviews"
-                className="cursor-pointer text-text-primary data-[state=active]:text-primary  data-[state=active]:after:bg-primary"
+                className="cursor-pointer text-text-primary data-[state=active]:text-primary data-[state=active]:after:bg-primary"
               >
                 Reviews
               </TabsTrigger>
             </TabsList>
+
             <div className="flex w-full gap-4">
               <TopCards
                 title="Employees"
@@ -178,7 +222,6 @@ const CompanyProfile = () => {
               />
             </div>
 
-            {/*Summary*/}
             <div>
               <p className="text-text-primary pb-2 font-medium text-xl">
                 Summary
@@ -186,31 +229,77 @@ const CompanyProfile = () => {
               <p className="max-w-pro">{dummyData.summary}</p>
             </div>
 
-            {/*Reviews*/}
             <div>
-              <p className="text-text-primary pb-2 font-medium text-xl">
-                Reviews
-              </p>
+              <div className="flex justify-between">
+                <p className="text-text-primary pb-2 font-medium text-xl">
+                  Reviews
+                </p>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex text-sm text-text-secondary mb-3 items-center border border-custom-border rounded-md px-3 py-1">
+                      Sort
+                      <ChevronDown />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onSelect={() => setSortOrder("desc")}>
+                      DESC
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setSortOrder("asc")}>
+                      ASC
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              <Tabs
+                value={activeCategory}
+                onValueChange={(val) =>
+                  setActiveCategory(val as ReviewCategory)
+                }
+              >
+                <TabsList className="gap-4 border bg-custom-border mb-4 rounded-md">
+                  {REVIEW_CATEGORIES.map((category) => (
+                    <TabsTrigger
+                      key={category.value}
+                      value={category.value}
+                      className="data-[state=active]:bg-primary data-[state=active]:text-white text-text-secondary p-4 cursor-pointer"
+                    >
+                      {category.label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+
               <div className="flex flex-col gap-3">
-                {dummyData.reviews.map((review) => (
-                  <ReviewCard
-                    rating={review.rating}
-                    text={review.text}
-                    date={review.date}
-                  />
-                ))}
+                {displayedReviews.length > 0 ? (
+                  displayedReviews.map((review, index) => (
+                    <ReviewCard
+                      key={index}
+                      rating={review.rating}
+                      text={review.text}
+                      date={review.date}
+                    />
+                  ))
+                ) : (
+                  <p className="text-text-secondary text-sm">
+                    No reviews for this category yet.
+                  </p>
+                )}
               </div>
             </div>
           </Tabs>
 
-          {/*Left section*/}
           <div className="md:w-1/3 w-full flex flex-col gap-5">
-            {/*Latest Jobs*/}
-            <div className="border border-custom-border rounded-xl py-4 px-3.5 ">
+            <div className="border border-custom-border rounded-xl py-4 px-3.5">
               <p className="text-text-primary pb-2">Latest Jobs</p>
               {dummyData.latestJobs.map((job) => (
-                <div className="border-t border-custom-border py-2">
-                  <div className="flex w-full justify-between items-center ">
+                <div
+                  className="border-t border-custom-border py-2"
+                  key={job.title}
+                >
+                  <div className="flex w-full justify-between items-center">
                     <p>{job.title.replaceAll("_", " ")}</p>
                     <p className="text-sm">{job.nature.replaceAll("_", " ")}</p>
                   </div>
@@ -219,30 +308,29 @@ const CompanyProfile = () => {
               ))}
             </div>
 
-            {/*Organization Details*/}
             <div className="border border-custom-border rounded-xl py-4 px-3.5">
               <p className="text-text-primary pb-2">Organization Details</p>
-              <div className=" border-custom-border py-2 flex justify-between">
+              <div className="border-custom-border py-2 flex justify-between">
                 <p>Email</p>
                 <p className="text-text-primary">
                   {dummyData.organizationDetails.email}
                 </p>
               </div>
-              <div className=" border-custom-border py-2 flex justify-between">
+              <div className="border-custom-border py-2 flex justify-between">
                 <p>Year Founded</p>
                 <p className="text-text-primary">
                   {dummyData.organizationDetails.yearFounded}
                 </p>
               </div>
-              <div className=" border-custom-border py-2 flex justify-between">
+              <div className="border-custom-border py-2 flex justify-between">
                 <p>Status</p>
                 {dummyData.organizationDetails.active ? (
                   <p className="text-[#0F973D]">Active</p>
                 ) : (
-                  <p className="">Inactive</p>
+                  <p>Inactive</p>
                 )}
               </div>
-              <div className=" border-custom-border py-2 flex justify-between">
+              <div className="border-custom-border py-2 flex justify-between">
                 <p>Industry</p>
                 <p className="text-text-primary">
                   {dummyData.organizationDetails.industry}
@@ -252,18 +340,18 @@ const CompanyProfile = () => {
                 <p>Founders</p>
                 <div className="flex gap-1 flex-col lg:flex-row">
                   {dummyData.organizationDetails.Founders.map((founder) => (
-                    <p className="text-text-primary">{founder},</p>
+                    <p className="text-text-primary" key={founder}>
+                      {founder},
+                    </p>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/*Location*/}
             <div className="border border-custom-border rounded-xl py-4 px-3.5">
               <p className="text-text-primary pb-2 border-custom-border border-b">
                 Locations
               </p>
-
               <div>
                 <p className="text-text-primary">Head Office</p>
                 <p>{dummyData.location}</p>

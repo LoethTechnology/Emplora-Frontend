@@ -17,7 +17,7 @@ const ProfileHeader = ({
   location,
 }: ProfileHeaderProps) => {
   return (
-    <div className="w-full rounded-xl border-custom-border border md:-mt-20 bg-white z-2000 relative px-2 md:px-6 py-4">
+    <div className="w-full rounded-xl border-custom-border border md:-mt-20 bg-white z-10 relative px-2 md:px-6 py-4">
       {/* Row 1: avatar + text + buttons (desktop) / avatar + buttons (mobile) */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex gap-4 md:items-center items-start flex-col md:flex-row min-w-0">
