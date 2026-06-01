@@ -1,3 +1,9 @@
-export default function SettingPage() {
-  return <div>Settings</div>
+import React from 'react'
+
+const Settings = () => {
+  return (
+    <div>Settings</div>
+  )
 }
+
+export default Settings

@@ -1,3 +1,9 @@
-export default function DashboardHomePage() {
-  return <div>Dashboard Home</div>
+import React from 'react'
+
+const DashboardHome = () => {
+  return (
+    <div>DashboardHome</div>
+  )
 }
+
+export default DashboardHome
