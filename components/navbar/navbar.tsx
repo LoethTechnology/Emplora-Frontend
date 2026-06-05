@@ -46,18 +46,20 @@ const Navbar = ({ variant = "default" }) => {
     <Fragment>
       <nav
         className={`w-full z-50 transition-all duration-300 
-  ${variant === "overlay"
-            ? "top-0 bg-white border-none text-white sticky"
-            : "top-0 bg-white border-none text-black sticky"
-          } ${!atTop && variant !== "overlay" ? `bg-white/60 backdrop-blur-xs shadow-md ${headerIsvisible}` : ""}`}
+  ${
+    variant === "overlay"
+      ? "top-0 bg-white border-none text-white sticky"
+      : "top-0 bg-white border-none text-black sticky"
+  } ${!atTop && variant !== "overlay" ? `bg-white/60 backdrop-blur-xs shadow-md ${headerIsvisible}` : ""}`}
       >
         <div className="mx-auto px-6 py-4 flex items-center justify-between">
           {/* 1. Logo Section */}
           <div className="shrink-0">
             <Link
               href="/"
-              className={`text-[24px] md:text-[30px] ${variant === "overlay" ? "text-white" : "text-[#000000bd]"
-                }`}
+              className={`text-[24px] md:text-[30px] ${
+                variant === "overlay" ? "text-white" : "text-[#000000bd]"
+              }`}
             >
               Emplora
             </Link>
@@ -67,37 +69,41 @@ const Navbar = ({ variant = "default" }) => {
           <div className="hidden min-[854px]:flex items-center justify-center gap-8 flex-1">
             <Link
               href="/"
-              className={`transition-colors ${variant === "overlay"
+              className={`transition-colors ${
+                variant === "overlay"
                   ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
-                }`}
+              }`}
             >
               Home
             </Link>
             <Link
               href="/about"
-              className={`transition-colors ${variant === "overlay"
+              className={`transition-colors ${
+                variant === "overlay"
                   ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
-                }`}
+              }`}
             >
               About Us
             </Link>
             <Link
               href="/search-company"
-              className={`transition-colors ${variant === "overlay"
+              className={`transition-colors ${
+                variant === "overlay"
                   ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
-                }`}
+              }`}
             >
               Search Company
             </Link>
             <Link
               href="/contact"
-              className={`transition-colors ${variant === "overlay"
+              className={`transition-colors ${
+                variant === "overlay"
                   ? "text-white hover:text-blue-200"
                   : "text-black hover:text-[#334EAC]"
-                }`}
+              }`}
             >
               Contact Us
             </Link>
@@ -137,73 +143,73 @@ const Navbar = ({ variant = "default" }) => {
             </button>
           </div>
         </div>
+      </nav>
 
-        {/* --- MOBILE SIDEBAR DRAWER --- */}
-        {/* Overlay background (Only active on mobile screens) */}
-        <div
-          className={`fixed inset-0 bg-black/60 z-[60] transition-opacity duration-300 min-[605px]:hidden ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
-          onClick={toggleMenu}
-        />
+      {/* --- MOBILE SIDEBAR DRAWER --- */}
+      {/* Overlay background (Only active on mobile screens) */}
+      <div
+        className={`fixed inset-0 bg-black/60 z-60 transition-opacity duration-300 min-[605px]:hidden ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+        onClick={toggleMenu}
+      />
 
-        {/* The Actual Drawer (Only active on mobile screens) */}
-        <div
-          className={`fixed top-0 left-0 h-screen w-[65%] bg-white z-[70] shadow-2xl transform transition-transform duration-300 ease-in-out min-[854px]:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
-        >
-          <div className="p-6 flex flex-col h-full">
-            <div className="flex justify-between items-center mb-10">
-              <span className="text-2xl text-[#334EAC]">Emplora</span>
-              <button onClick={toggleMenu} className="text-3xl text-gray-500">
-                &times;
-              </button>
+      {/* The Actual Drawer (Only active on mobile screens) */}
+      <div
+        className={`fixed top-0 left-0 h-full w-[65%] bg-white z-70 shadow-2xl transform transition-transform duration-300 ease-in-out min-[854px]:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <div className="p-6 flex flex-col h-full">
+          <div className="flex justify-between items-center mb-10">
+            <span className="text-2xl text-[#334EAC]">Emplora</span>
+            <button onClick={toggleMenu} className="text-3xl text-gray-500">
+              &times;
+            </button>
+          </div>
+
+          <nav className="flex flex-col gap-6 text-lg font-medium text-gray-700">
+            <Link
+              href="/"
+              onClick={toggleMenu}
+              className="hover:text-[#334EAC]"
+            >
+              Home
+            </Link>
+            <Link
+              href="/about"
+              onClick={toggleMenu}
+              className="hover:text-[#334EAC]"
+            >
+              About Us
+            </Link>
+            <Link
+              href="/search-company"
+              onClick={toggleMenu}
+              className="hover:text-[#334EAC]"
+            >
+              Search Company
+            </Link>
+            <Link
+              href="/contact"
+              onClick={toggleMenu}
+              className="hover:text-[#334EAC]"
+            >
+              Contact Us
+            </Link>
+          </nav>
+
+          <div className="mt-auto pb-10 flex flex-col gap-4 text-lg font-medium text-gray-700">
+            {/* Creating the link url button for signIn */}
+            <div>
+              <Link href="/signin" className="hover:text-[#334EAC]">
+                Sign In
+              </Link>
             </div>
-
-            <nav className="flex flex-col gap-6 text-lg font-medium text-gray-700">
-              <Link
-                href="/"
-                onClick={toggleMenu}
-                className="hover:text-[#334EAC]"
-              >
-                Home
-              </Link>
-              <Link
-                href="/about"
-                onClick={toggleMenu}
-                className="hover:text-[#334EAC]"
-              >
-                About Us
-              </Link>
-              <Link
-                href="/search-company"
-                onClick={toggleMenu}
-                className="hover:text-[#334EAC]"
-              >
-                Search Company
-              </Link>
-              <Link
-                href="/contact"
-                onClick={toggleMenu}
-                className="hover:text-[#334EAC]"
-              >
-                Contact Us
-              </Link>
-            </nav>
-
-            <div className="mt-auto pb-10 flex flex-col gap-4 text-lg font-medium text-gray-700">
-              {/* Creating the link url button for signIn */}
-              <div>
-                <Link href="/signin" className="hover:text-[#334EAC]">
-                  Sign In
-                </Link>
-              </div>
-              {/* Adding the register button */}
-              <div>
-                {/* Creating the link url button for register */}
-                <Link href="/register">Register</Link>
-              </div>
+            {/* Adding the register button */}
+            <div>
+              {/* Creating the link url button for register */}
+              <Link href="/register">Register</Link>
             </div>
           </div>
         </div>
-      </nav>
+      </div>
     </Fragment>
   );
 };
