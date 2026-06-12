@@ -1,19 +1,59 @@
 // Using client
-"use client";
+'use client';
 
 // Importing the necessary modules
-import { Fragment, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import emailLogo from "@/images/signin/emailLogo.png";
-import signinLogo from "@/images/signin/signinLogo.png";
-import passwordLogo from "@/images/signin/passwordLogo.png";
-import seePasswordLogo from "@/images/signin/seePasswordLogo.png";
+import { Fragment, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import emailLogo from '@/images/signin/emailLogo.png';
+import signinLogo from '@/images/signin/signinLogo.png';
+import passwordLogo from '@/images/signin/passwordLogo.png';
+import seePasswordLogo from '@/images/signin/seePasswordLogo.png';
+import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
 
 // Creating the login component
 const Signin = () => {
   // Setting some necessary state
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const useSignInUser = CreatePostMutationHook({
+    endpoint: '/auth/login',
+    requiresAuth: false,
+  });
+
+  const { mutateAsync: signIn, isPending } = useSignInUser();
+
+  const handleSignIn = async () => {
+    setFormError(null);
+
+    if (!email.trim() || !password) {
+      setFormError('Please enter both email and password.');
+      return;
+    }
+
+    const form = {
+      email: email.trim(),
+      password,
+    };
+
+    try {
+      const response = await signIn(form);
+
+      if (response) {
+        router.push('/');
+      } else {
+        setFormError('Sign in failed. Please try again.');
+      }
+    } catch (error) {
+      setFormError('Sign in failed. Please try again.');
+    }
+  };
 
   // Rendering the component
   return (
@@ -22,25 +62,17 @@ const Signin = () => {
       <main className="p-4 pt-2.5 flex justify-center">
         {/* Adding the left section - Hidden on mobile, block on large screens */}
         <section className="hidden lg:block lg:w-1/2 h-[97vh]">
-          <Image
-            src={signinLogo}
-            className="h-full w-full rounded-[7px]"
-            alt="signLogo"
-          />
+          <Image src={signinLogo} className="h-full w-full rounded-[7px]" alt="signLogo" />
         </section>
 
         {/* Adding the right section */}
         <section className="place-items-center flex flex-col h-[95vh] w-full lg:w-1/2">
           <div className="flex flex-col justify-center h-full px-6 pt-30">
             <div className="text-center mb-[20px]">
-              <h2 className="font-bold text-black text-2xl">
-                {" "}
-                Welcome Back 👋{" "}
-              </h2>
+              <h2 className="font-bold text-black text-2xl"> Welcome Back 👋 </h2>
               <p className="mt-[4px]">
-                {" "}
-                Kindly enter the correct details to sign in to your
-                account.{" "}
+                {' '}
+                Kindly enter the correct details to sign in to your account.{' '}
               </p>
             </div>
 
@@ -66,6 +98,8 @@ const Signin = () => {
                 <input
                   type="email"
                   placeholder="Enter your email address"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   className="ml-1.5 outline-none border-none focus:ring-0 w-full mr-4.75 bg-white autofill:shadow-[0_0_0_30px_white_inset]"
                 />
               </div>
@@ -92,12 +126,19 @@ const Signin = () => {
                     />
                   </svg>
                   <input
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Enter password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    autoComplete="new-password"
                     className="ml-1.5 w-full outline-none border-none focus:ring-0"
                   />
                 </div>
-                <div onClick={() => setShowPassword(!showPassword)}>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="ml-2 shrink-0"
+                >
                   {showPassword ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -134,7 +175,7 @@ const Signin = () => {
                       />
                     </svg>
                   )}
-                </div>
+                </button>
               </div>
             </div>
 
@@ -148,26 +189,38 @@ const Signin = () => {
             </div>
 
             <div className="items-left flex items-center gap-x-0.5 mt-[35px]">
-              <input type="checkbox" className="accent-blue-600 h-4 w-4" />
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={e => setRememberMe(e.target.checked)}
+                className="accent-blue-600 h-4 w-4"
+              />
               <div className="ml-[4px]">
                 <label className="text-[15px]"> Remember me </label>
               </div>
             </div>
 
+            {formError && <div className="text-red-500 text-sm mt-4 mb-3">{formError}</div>}
+
             <div className="my-5 w-full">
-              <button className="w-full bg-[#334EAC] hover:bg-[#24377d] rounded-md text-white h-14">
-                Sign In
+              <button
+                type="button"
+                onClick={handleSignIn}
+                disabled={isPending}
+                className="w-full bg-[#334EAC] hover:bg-[#24377d] rounded-md text-white h-14 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isPending ? 'Signing in...' : 'Sign In'}
               </button>
             </div>
 
             <div className="text-center text-[15px] text-[#9e9d9d]">
               <p>
-                {" "}
-                Don&apos;t have an account?{" "}
+                {' '}
+                Don&apos;t have an account?{' '}
                 <Link href="/register" className="text-[#334EAC]">
-                  {" "}
-                  Create an account{" "}
-                </Link>{" "}
+                  {' '}
+                  Create an account{' '}
+                </Link>{' '}
               </p>
             </div>
 
@@ -175,9 +228,7 @@ const Signin = () => {
               <Link href="/terms" className="text-[#334EAC]">
                 Terms of Service | Privacy Policy
               </Link>
-              <div className="text-gray-400">
-                &copy; Emplora. All rights reserved
-              </div>
+              <div className="text-gray-400">&copy; Emplora. All rights reserved</div>
             </div>
           </div>
         </section>
