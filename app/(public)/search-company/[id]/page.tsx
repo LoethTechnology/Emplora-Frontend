@@ -9,7 +9,7 @@ import FavoriteBtn from "@/components/buttons/FavoriteBtn";
 import ProfileHeader from "../../../../components/searchCompany/ProfileHeader";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ReactNode } from "react";
-import { ChevronDown, MessageCircleMore, Star, UsersRound, Plus } from "lucide-react";
+import { ChevronDown, MessageCircleMore, Star, UsersRound } from "lucide-react";
 import ReviewCard from "../../../../components/searchCompany/ReviewCard";
 import {
   DropdownMenu,
@@ -172,6 +172,7 @@ const CompanyProfile = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20">
         
         {/* Profile Info Header Placement */}
+        {/* Note: The "Write a Review" button is already managed right inside this <ProfileHeader /> component configuration! */}
         <div className="bg-white rounded-2xl shadow-sm border border-custom-border p-6 mb-8">
           <ProfileHeader
             img={companyProfile}
@@ -224,15 +225,8 @@ const CompanyProfile = () => {
                 </h3>
 
                 <div className="flex gap-3 items-center">
-                  {/* Write Review Dialog Component */}
+                  {/* Global Review Dialog Declaration State Holder (Trigger button removed per Noel's request to prevent duplicates) */}
                   <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                    <DialogTrigger asChild>
-                      <button className="flex text-sm text-white bg-primary hover:bg-primary/90 font-medium items-center rounded-md px-4 py-2 gap-1.5 transition-all">
-                        <Plus size={16} />
-                        Write a Review
-                      </button>
-                    </DialogTrigger>
-                    
                     <DialogContent className="sm:max-w-[550px] p-6 bg-white rounded-xl">
                       <DialogHeader>
                         <DialogTitle className="text-xl font-semibold text-text-primary">
