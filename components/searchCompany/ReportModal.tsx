@@ -99,7 +99,9 @@ const ReportModal = ({ onOpenChange, open, onSubmit }: Props) => {
         {step === 0 && (
           <div className="space-y-4">
             <div className="px-2">
-              <h3 className="text-md md:text-lg font-medium">Report this comment</h3>
+              <h3 className="text-md md:text-lg font-medium text-text-primary">
+                Report this comment
+              </h3>
               <p className="text-sm md:text-md text-text-secondary">
                 We aim to keep this space safe and respectful. Report any comment that feels
                 inappropriate.
@@ -125,7 +127,7 @@ const ReportModal = ({ onOpenChange, open, onSubmit }: Props) => {
                     >
                       <circle cx="2.5" cy="2.5" r="2.5" fill="#2F2F2F" />
                     </svg>
-                    <p className="text-sm text-left">{type.name}</p>
+                    <p className="text-sm md:text-base text-left text-text-primary">{type.name}</p>
                   </div>
                   <ChevronRight />
                 </button>
@@ -140,7 +142,7 @@ const ReportModal = ({ onOpenChange, open, onSubmit }: Props) => {
               <Button variant={'ghost'} onClick={() => setStep(0)}>
                 <ChevronLeft size={20} />
               </Button>
-              <h3 className="md:text-lg font-medium">{selectedType?.name}</h3>
+              <h3 className="md:text-lg font-medium text-text-primary">{selectedType?.name}</h3>
             </div>
             <div className="flex flex-col gap-30">
               <div className="space-y-2 ">
@@ -156,7 +158,9 @@ const ReportModal = ({ onOpenChange, open, onSubmit }: Props) => {
                     >
                       <circle cx="2.5" cy="2.5" r="2.5" fill="#2F2F2F" />
                     </svg>
-                    <p className="text-sm text-left text-text-secondary">{subCategory}</p>
+                    <p className="text-sm md:text-base text-left text-text-secondary">
+                      {subCategory}
+                    </p>
                   </div>
                 ))}
               </div>
