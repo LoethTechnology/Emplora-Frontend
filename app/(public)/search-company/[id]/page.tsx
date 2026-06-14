@@ -27,6 +27,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog';
+import ReportModal from '@/components/searchCompany/ReportModal';
 
 export type ReviewCategory =
   | 'all'
@@ -153,7 +154,11 @@ const CompanyProfile = () => {
   return (
     <div className="mb-20 w-full min-h-screen bg-white">
       <Navbar />
-
+      <ReportModal
+        open={isReportModalOpen}
+        onOpenChange={setIsReportModalOpen}
+        onSubmit={() => handleReportSubmit}
+      />
       {/* Banner Area */}
       <div className="w-full relative h-50 md:h-75">
         <Image src={companyProfile} alt="company image" fill className="object-cover" priority />
@@ -338,93 +343,14 @@ const CompanyProfile = () => {
                 {displayedReviews.length > 0 ? (
                   displayedReviews.map((review, index) => (
                     <div key={index}>
-                      {/* The Dialog wrapper triggers cleanly when the nested layout areas are targeted */}
-                      <Dialog
-                        open={isReportModalOpen && reportingReviewId === index}
-                        onOpenChange={open => {
-                          setIsReportModalOpen(open);
-                          if (open) setReportingReviewId(index);
-                        }}
-                      >
-                        <DialogTrigger asChild>
-                          <div className="cursor-pointer">
-                            <ReviewCard
-                              rating={review.rating}
-                              text={review.text}
-                              date={review.date}
-                            />
-                          </div>
-                        </DialogTrigger>
-
-                        <DialogContent className="sm:max-w-120 p-6 bg-white rounded-xl">
-                          <DialogHeader>
-                            <DialogTitle className="text-xl font-semibold text-text-primary">
-                              Report this Review
-                            </DialogTitle>
-                            <DialogDescription className="text-xs text-text-secondary">
-                              Help us understand what is wrong with this review.
-                            </DialogDescription>
-                          </DialogHeader>
-
-                          <form onSubmit={handleReportSubmit} className="flex flex-col gap-5 mt-4">
-                            <div className="flex flex-col gap-3">
-                              <p className="text-sm font-medium text-text-primary">
-                                Select a reason:
-                              </p>
-                              {[
-                                'Inappropriate or offensive language',
-                                'Fake or misleading review content',
-                                'Spam, advertisement, or promotional text',
-                                'Contains confidential company information',
-                              ].map(reason => (
-                                <label
-                                  key={reason}
-                                  className="flex items-start gap-3 p-2.5 rounded-lg border border-custom-border hover:bg-neutral-50 cursor-pointer text-sm text-text-secondary"
-                                >
-                                  <input
-                                    type="radio"
-                                    name="reportReason"
-                                    value={reason}
-                                    checked={selectedReason === reason}
-                                    onChange={e => setSelectedReason(e.target.value)}
-                                    className="mt-0.5 h-4 w-4 text-primary"
-                                    required
-                                  />
-                                  <span>{reason}</span>
-                                </label>
-                              ))}
-                            </div>
-
-                            <div className="flex flex-col gap-2">
-                              <label className="text-sm font-medium text-text-primary">
-                                Additional details (Optional)
-                              </label>
-                              <textarea
-                                className="w-full min-h-22.5 p-3 rounded-lg border border-custom-border bg-transparent text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                                placeholder="Provide more context..."
-                                value={reportComment}
-                                onChange={e => setReportComment(e.target.value)}
-                              />
-                            </div>
-
-                            <DialogFooter>
-                              <button
-                                type="button"
-                                onClick={() => setIsReportModalOpen(false)}
-                                className="px-4 py-2 text-sm border border-custom-border rounded-md"
-                              >
-                                Cancel
-                              </button>
-                              <button
-                                type="submit"
-                                className="px-4 py-2 text-sm text-white bg-red-600 hover:bg-red-700 rounded-md"
-                              >
-                                Submit Report
-                              </button>
-                            </DialogFooter>
-                          </form>
-                        </DialogContent>
-                      </Dialog>
+                      <div className="cursor-pointer">
+                        <ReviewCard
+                          rating={review.rating}
+                          text={review.text}
+                          date={review.date}
+                          onReport={() => setIsReportModalOpen(true)}
+                        />
+                      </div>
                     </div>
                   ))
                 ) : (
