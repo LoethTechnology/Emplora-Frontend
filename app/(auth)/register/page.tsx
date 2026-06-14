@@ -1,17 +1,18 @@
-"use client";
+'use client';
 
-import { Fragment, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import signinLogo from "@/images/signin/signinLogo.png";
+import { Fragment, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import signinLogo from '@/images/signin/signinLogo.png';
+import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
 
 const COUNTRY_CODES = [
-  { code: "+234", iso: "ng", name: "Nigeria" },
-  { code: "+1",   iso: "us", name: "USA" },
-  { code: "+44",  iso: "gb", name: "UK" },
-  { code: "+233", iso: "gh", name: "Ghana" },
-  { code: "+27",  iso: "za", name: "South Africa" },
+  { code: '+234', iso: 'ng', name: 'Nigeria' },
+  { code: '+1', iso: 'us', name: 'USA' },
+  { code: '+44', iso: 'gb', name: 'UK' },
+  { code: '+233', iso: 'gh', name: 'Ghana' },
+  { code: '+27', iso: 'za', name: 'South Africa' },
 ];
 
 const FlagImg = ({ iso }: { iso: string }) => (
@@ -26,32 +27,79 @@ const FlagImg = ({ iso }: { iso: string }) => (
 );
 
 const passwordRequirements = [
-  { label: "At least 8 characters", regex: /.{8,}/ },
-  { label: "At least 1 uppercase letter (A-Z)", regex: /[A-Z]/ },
-  { label: "At least 1 lowercase letter (a-z)", regex: /[a-z]/ },
-  { label: "At least 1 number (0-9)", regex: /[0-9]/ },
-  { label: "At least 1 special character (e.g. ! @ # $ % ^ & * )", regex: /[!@#$%^&*]/ },
+  { label: 'At least 8 characters', regex: /.{8,}/ },
+  { label: 'At least 1 uppercase letter (A-Z)', regex: /[A-Z]/ },
+  { label: 'At least 1 lowercase letter (a-z)', regex: /[a-z]/ },
+  { label: 'At least 1 number (0-9)', regex: /[0-9]/ },
+  {
+    label: 'At least 1 special character (e.g. ! @ # $ % ^ & * )',
+    regex: /[!@#$%^&*]/,
+  },
 ];
 
 const Register = () => {
   const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [password, setPassword] = useState("");
   const [countryCode, setCountryCode] = useState(COUNTRY_CODES[0]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [agreementsAccepted, setAgreementsAccepted] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const useRegisterUser = CreatePostMutationHook({
+    endpoint: '/user',
+    requiresAuth: false,
+  });
+
+  const { mutateAsync: createAccount, isPending: isSubmitting } = useRegisterUser();
+
+  const handleRegister = async () => {
+    setFormError(null);
+
+    if (!email.trim() || !phone.trim() || !password || !confirmPassword) {
+      setFormError('Please complete all fields before continuing.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setFormError('Passwords do not match.');
+      return;
+    }
+
+    if (!agreementsAccepted) {
+      setFormError('Please accept the Terms of Service and Privacy Policy.');
+      return;
+    }
+
+    const form = {
+      email: email.trim(),
+      phone: `${countryCode.code}${phone.trim()}`,
+      password,
+    };
+
+    try {
+      const response = await createAccount(form);
+
+      if (response) {
+        router.push('/verify-email');
+      } else {
+        setFormError('Registration failed. Please try again.');
+      }
+    } catch (error) {
+      setFormError('Registration failed. Please try again.');
+    }
+  };
 
   return (
     <Fragment>
       <main className="p-4 pt-2.5 flex justify-center min-h-svh">
         {/* Left section - hidden on mobile */}
         <section className="hidden lg:block lg:w-1/2 relative rounded-[7px] overflow-hidden self-stretch">
-          <Image
-            src={signinLogo}
-            className="object-cover"
-            alt="registerLogo"
-            fill
-          />
+          <Image src={signinLogo} className="object-cover" alt="registerLogo" fill />
         </section>
 
         {/* Right section */}
@@ -60,9 +108,7 @@ const Register = () => {
             {/* Header */}
             <div className="text-center mb-[20px]">
               <h2 className="font-bold text-black text-2xl">Create an account</h2>
-              <p className="mt-[4px]">
-                Kindly enter the correct details to create your account.
-              </p>
+              <p className="mt-[4px]">Kindly enter the correct details to create your account.</p>
             </div>
 
             {/* Email */}
@@ -86,6 +132,8 @@ const Register = () => {
                 <input
                   type="email"
                   placeholder="Enter your email address"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   className="ml-1.5 outline-none border-none focus:ring-0 w-full mr-4 bg-white autofill:shadow-[0_0_0_30px_white_inset]"
                 />
               </div>
@@ -119,7 +167,7 @@ const Register = () => {
 
                 {dropdownOpen && (
                   <div className="absolute top-full left-0 mt-1 bg-white border border-[#e7e5e5] rounded-[6px] shadow-md z-10 w-44">
-                    {COUNTRY_CODES.map((c) => (
+                    {COUNTRY_CODES.map(c => (
                       <button
                         key={c.code}
                         type="button"
@@ -140,6 +188,8 @@ const Register = () => {
                 <input
                   type="tel"
                   placeholder="Enter your phone number"
+                  value={phone}
+                  onChange={e => setPhone(e.target.value)}
                   className="ml-2 outline-none border-none focus:ring-0 w-full py-2.5 mr-3 bg-white"
                 />
               </div>
@@ -165,11 +215,12 @@ const Register = () => {
                     />
                   </svg>
                   <input
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your new password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                     className="ml-1.5 w-full outline-none border-none focus:ring-0"
+                    autoComplete="new-password"
                   />
                 </div>
                 <button
@@ -178,13 +229,39 @@ const Register = () => {
                   className="ml-2 shrink-0"
                 >
                   {showPassword ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.8}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      />
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.8}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   )}
                 </button>
@@ -192,16 +269,16 @@ const Register = () => {
 
               {/* Password requirements */}
               <ul className="mt-2 ml-1 space-y-0.5">
-                {passwordRequirements.map((req) => (
+                {passwordRequirements.map(req => (
                   <li
                     key={req.label}
                     className={`flex items-center gap-1.5 text-[13px] ${
-                      req.regex.test(password) ? "text-green-500" : "text-gray-500"
+                      req.regex.test(password) ? 'text-green-500' : 'text-gray-500'
                     }`}
                   >
                     <span
                       className={`inline-block h-1.5 w-1.5 rounded-full shrink-0 ${
-                        req.regex.test(password) ? "bg-green-500" : "bg-gray-300"
+                        req.regex.test(password) ? 'bg-green-500' : 'bg-gray-300'
                       }`}
                     />
                     {req.label}
@@ -230,8 +307,10 @@ const Register = () => {
                     />
                   </svg>
                   <input
-                    type={showConfirmPassword ? "text" : "password"}
+                    type={showConfirmPassword ? 'text' : 'password'}
                     placeholder="Confirm your new password"
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
                     className="ml-1.5 w-full outline-none border-none focus:ring-0"
                   />
                 </div>
@@ -241,13 +320,39 @@ const Register = () => {
                   className="ml-2 shrink-0"
                 >
                   {showConfirmPassword ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.8}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      />
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.8}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   )}
                 </button>
@@ -256,29 +361,43 @@ const Register = () => {
 
             {/* Terms checkbox */}
             <div className="flex items-center gap-x-2 mb-5">
-              <input type="checkbox" aria-label="I agree to the Terms of Service and Privacy Policy" className="accent-blue-600 h-4 w-4 shrink-0" />
+              <input
+                type="checkbox"
+                checked={agreementsAccepted}
+                onChange={e => setAgreementsAccepted(e.target.checked)}
+                aria-label="I agree to the Terms of Service and Privacy Policy"
+                className="accent-blue-600 h-4 w-4 shrink-0"
+              />
               <label className="text-[14px]">
-                I agree to the{" "}
-                <Link href="/terms" className="text-[#334EAC]">Terms of Service</Link>
-                {" "}and{" "}
-                <Link href="/privacy" className="text-[#334EAC]">Privacy Policy</Link>
+                I agree to the{' '}
+                <Link href="/terms" className="text-[#334EAC]">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link href="/privacy" className="text-[#334EAC]">
+                  Privacy Policy
+                </Link>
               </label>
             </div>
+
+            {formError && <div className="text-red-500 text-sm mb-4">{formError}</div>}
 
             {/* Submit button */}
             <div className="mb-5 w-full">
               <button
-                onClick={() => router.push("/verify-email")}
-                className="w-full bg-[#334EAC] hover:bg-[#24377d] rounded-md text-white h-14"
+                type="button"
+                onClick={handleRegister}
+                disabled={isSubmitting}
+                className="w-full bg-[#334EAC] hover:bg-[#24377d] rounded-md text-white h-14 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Create an Account
+                {isSubmitting ? 'Creating account...' : 'Create an Account'}
               </button>
             </div>
 
             {/* Sign in link */}
             <div className="text-center text-[15px] text-[#9e9d9d]">
               <p>
-                Already have an account?{" "}
+                Already have an account?{' '}
                 <Link href="/signin" className="text-[#334EAC]">
                   Sign In
                 </Link>
