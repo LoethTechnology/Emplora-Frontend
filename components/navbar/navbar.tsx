@@ -1,72 +1,89 @@
-"use client";
+'use client';
 
 // Importing the necessary modules
-import { Fragment, useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation"; // Imported to detect the current page path
-import RegisterBtn from "@/components/buttons/registerBtn";
-import SignInBtn from "@/components/buttons/signInBtn";
+import { Fragment, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation'; // Imported to detect the current page path
+import RegisterBtn from '@/components/buttons/registerBtn';
+import SignInBtn from '@/components/buttons/signInBtn';
+import { useUserStore } from '@/store/user.store';
 
 // Creating the navbar component
-const Navbar = ({ variant = "default" }) => {
+const Navbar = ({ variant = 'default' }) => {
   // Setting the states
   const [isOpen, setIsOpen] = useState(false);
   const [atTop, setAtTop] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
-  
+
   // Hook to get the current URL pathname
   const pathname = usePathname();
 
-  let lastScrollTop = 0;
+  const [lastScrollTop, setLastScrollTop] = useState(0);
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
       if (currentScroll === 0) {
-        // if statement to check if we are at the top of the page or not.
         setAtTop(true);
+        setIsVisible(true);
+        setLastScrollTop(0);
       } else {
         setAtTop(false);
-        if (currentScroll > lastScrollTop) {
-          setIsVisible(false);
-        } else {
-          setIsVisible(true);
-        }
-        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // this line determines if the scroll is going up or down
+        // use functional updater to read latest prev value and compare reliably
+        setLastScrollTop(prev => {
+          if (currentScroll > prev) {
+            setIsVisible(false);
+          } else {
+            setIsVisible(true);
+          }
+          return currentScroll <= 0 ? 0 : currentScroll;
+        });
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   // Creating a function to handle the menu
   const toggleMenu = () => setIsOpen(!isOpen);
-  const headerIsvisible = !isVisible ? "top-[-200px]" : "top-0";
+  const headerIsvisible = !isVisible ? 'top-[-200px]' : 'top-0';
 
   // Helper function to build dynamic class names for desktop links based on active state
   const getDesktopLinkClass = (path: string) => {
     const isActive = pathname === path;
-    const baseClasses = "transition-colors text-sm";
-    
+    const baseClasses = 'transition-colors text-sm';
+
     if (isActive) {
       return `${baseClasses} text-[#334EAC] font-semibold`;
     }
-    
-    return variant === "overlay"
+
+    return variant === 'overlay'
       ? `${baseClasses} text-white hover:text-blue-200`
       : `${baseClasses} text-black hover:text-[#334EAC]`;
   };
 
+  const user = useUserStore(state => state.user);
+
   // Helper function to build dynamic class names for mobile drawer links based on active state
   const getMobileLinkClass = (path: string) => {
     const isActive = pathname === path;
-    return isActive 
-      ? "text-[#334EAC] font-semibold" 
-      : "hover:text-[#334EAC]";
+    return isActive ? 'text-[#334EAC] font-semibold' : 'hover:text-[#334EAC]';
   };
+
+  const getInitials = (firstName: string, lastName: string, email?: string) => {
+    const first = firstName?.trim()?.[0] || '';
+    const last = lastName?.trim()?.[0] || '';
+    const initials = `${first}${last}`.trim();
+    if (initials.length > 0) {
+      return initials.toUpperCase();
+    }
+    return email?.trim()?.[0]?.toUpperCase() ?? 'U';
+  };
+
+  console.log(user, 'user');
 
   // Rendering the navbar component
   return (
@@ -74,10 +91,10 @@ const Navbar = ({ variant = "default" }) => {
       <nav
         className={`w-full z-50 transition-all duration-300 
   ${
-    variant === "overlay"
-      ? "top-0 bg-white border-none text-white sticky"
-      : "top-0 bg-white border-none text-black sticky"
-  } ${!atTop && variant !== "overlay" ? `bg-white/60 backdrop-blur-xs shadow-md ${headerIsvisible}` : ""}`}
+    variant === 'overlay'
+      ? 'top-0 bg-white border-none text-white sticky'
+      : 'top-0 bg-white border-none text-black sticky'
+  } ${!atTop && variant !== 'overlay' ? `bg-white/60 backdrop-blur-xs shadow-md ${headerIsvisible}` : ''}`}
       >
         <div className="mx-auto px-6 py-4 flex items-center justify-between">
           {/* 1. Logo Section */}
@@ -85,7 +102,7 @@ const Navbar = ({ variant = "default" }) => {
             <Link
               href="/"
               className={`text-[24px] md:text-[30px] ${
-                variant === "overlay" ? "text-white" : "text-[#000000bd]"
+                variant === 'overlay' ? 'text-white' : 'text-[#000000bd]'
               }`}
             >
               Emplora
@@ -94,28 +111,36 @@ const Navbar = ({ variant = "default" }) => {
 
           {/* 2. Desktop Links (Now features working active states matching design specs) */}
           <div className="hidden min-[854px]:flex items-center justify-center gap-8 flex-1">
-            <Link href="/" className={getDesktopLinkClass("/")}>
+            <Link href="/" className={getDesktopLinkClass('/')}>
               Home
             </Link>
-            <Link href="/about" className={getDesktopLinkClass("/about")}>
+            <Link href="/about" className={getDesktopLinkClass('/about')}>
               About Us
             </Link>
-            <Link href="/search-company" className={getDesktopLinkClass("/search-company")}>
+            <Link href="/search-company" className={getDesktopLinkClass('/search-company')}>
               Search Company
             </Link>
-            <Link href="/contact" className={getDesktopLinkClass("/contact")}>
+            <Link href="/contact" className={getDesktopLinkClass('/contact')}>
               Contact Us
             </Link>
           </div>
 
           {/* 3. Desktop Buttons */}
           <div className="hidden min-[854px]:flex items-center gap-3">
-            <div>
-              <RegisterBtn />
-            </div>
-            <div className="ml-1.5">
-              <SignInBtn />
-            </div>
+            {user ? (
+              <div className="h-10 w-10 rounded-full bg-[#334EAC] text-white text-sm flex items-center justify-center font-semibold uppercase">
+                {getInitials(user.first_name, user.last_name, user.email)}
+              </div>
+            ) : (
+              <>
+                <div>
+                  <RegisterBtn />
+                </div>
+                <div className="ml-1.5">
+                  <SignInBtn />
+                </div>
+              </>
+            )}
           </div>
 
           {/* 4. Mobile Menu Toggle */}
@@ -126,12 +151,7 @@ const Navbar = ({ variant = "default" }) => {
               aria-label="Toggle Menu"
             >
               {/* Standard Hamburger SVG Icon */}
-              <svg
-                className="w-8 h-8"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -147,13 +167,13 @@ const Navbar = ({ variant = "default" }) => {
       {/* --- MOBILE SIDEBAR DRAWER --- */}
       {/* Overlay background */}
       <div
-        className={`fixed inset-0 bg-black/60 z-60 transition-opacity duration-300 min-[605px]:hidden ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+        className={`fixed inset-0 bg-black/60 z-60 transition-opacity duration-300 min-[605px]:hidden ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
         onClick={toggleMenu}
       />
 
       {/* The Actual Drawer */}
       <div
-        className={`fixed top-0 left-0 h-full w-[65%] bg-white z-70 shadow-2xl transform transition-transform duration-300 ease-in-out min-[854px]:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed top-0 left-0 h-full w-[65%] bg-white z-70 shadow-2xl transform transition-transform duration-300 ease-in-out min-[854px]:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="p-6 flex flex-col h-full">
           <div className="flex justify-between items-center mb-10">
@@ -165,47 +185,46 @@ const Navbar = ({ variant = "default" }) => {
 
           {/* Mobile navigation links with active state context */}
           <nav className="flex flex-col gap-6 text-lg font-medium text-gray-700">
-            <Link
-              href="/"
-              onClick={toggleMenu}
-              className={getMobileLinkClass("/")}
-            >
+            <Link href="/" onClick={toggleMenu} className={getMobileLinkClass('/')}>
               Home
             </Link>
-            <Link
-              href="/about"
-              onClick={toggleMenu}
-              className={getMobileLinkClass("/about")}
-            >
+            <Link href="/about" onClick={toggleMenu} className={getMobileLinkClass('/about')}>
               About Us
             </Link>
             <Link
               href="/search-company"
               onClick={toggleMenu}
-              className={getMobileLinkClass("/search-company")}
+              className={getMobileLinkClass('/search-company')}
             >
               Search Company
             </Link>
-            <Link
-              href="/contact"
-              onClick={toggleMenu}
-              className={getMobileLinkClass("/contact")}
-            >
+            <Link href="/contact" onClick={toggleMenu} className={getMobileLinkClass('/contact')}>
               Contact Us
             </Link>
           </nav>
 
           <div className="mt-auto pb-10 flex flex-col gap-4 text-lg font-medium text-gray-700">
-            <div>
-              <Link href="/signin" className="hover:text-[#334EAC]">
-                Sign In
-              </Link>
-            </div>
-            <div>
-              <Link href="/register" className="hover:text-[#334EAC]">
-                Register
-              </Link>
-            </div>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-[#334EAC] text-white flex items-center justify-center font-semibold uppercase">
+                  {getInitials(user.first_name, user.last_name)}
+                </div>
+                <span>Hi, {user.first_name}</span>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <Link href="/signin" className="hover:text-[#334EAC]">
+                    Sign In
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/register" className="hover:text-[#334EAC]">
+                    Register
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
