@@ -10,6 +10,7 @@ type AuthState = {
 
 type AuthActions = {
   setAuth: (user: UserDto, token: string) => void;
+  setToken: (token: string) => void;
   clearAuth: () => void;
   updateUser: (partial: Partial<UserDto>) => void;
 };
@@ -26,6 +27,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       ...initialState,
 
       setAuth: (user, token) => set({ user, token, isAuthenticated: true }),
+
+      setToken: token => set(state => ({ ...state, token })),
 
       clearAuth: () => set(initialState),
 
