@@ -6,11 +6,10 @@ import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import emailLogo from '@/images/signin/emailLogo.png';
 import signinLogo from '@/images/signin/signinLogo.png';
-import passwordLogo from '@/images/signin/passwordLogo.png';
-import seePasswordLogo from '@/images/signin/seePasswordLogo.png';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
+import { useUserStore } from '@/store/user.store';
+import { useAuthStore } from '@/store/auth.store';
 
 // Creating the login component
 const Signin = () => {
@@ -21,6 +20,9 @@ const Signin = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
+
+  const setUser = useUserStore(state => state.setUser);
+  const setAuth = useAuthStore(state => state.setAuth);
 
   const useSignInUser = CreatePostMutationHook({
     endpoint: '/auth/login',
@@ -44,12 +46,19 @@ const Signin = () => {
 
     try {
       const response = await signIn(form);
+      const payload = response?.data ?? response;
+      const user = payload?.data ?? payload?.user ?? payload;
+      const token = response?.token ?? payload?.token ?? payload?.data?.token;
 
-      if (response) {
-        router.push('/');
-      } else {
-        setFormError('Sign in failed. Please try again.');
+      if (user) {
+        setUser(user);
       }
+
+      if (user && token) {
+        setAuth(user, token);
+      }
+
+      router.push('/');
     } catch (error) {
       setFormError('Sign in failed. Please try again.');
     }
