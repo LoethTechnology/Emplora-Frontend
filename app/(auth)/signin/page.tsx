@@ -6,11 +6,11 @@ import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import emailLogo from '@/images/signin/emailLogo.png';
 import signinLogo from '@/images/signin/signinLogo.png';
-import passwordLogo from '@/images/signin/passwordLogo.png';
-import seePasswordLogo from '@/images/signin/seePasswordLogo.png';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
+import { useUserStore } from '@/store/user.store';
+import { useAuthStore } from '@/store/auth.store';
+import AxiosInstance from '@/src/api/configs';
 
 // Creating the login component
 const Signin = () => {
@@ -21,6 +21,11 @@ const Signin = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const setUser = useUserStore(state => state.setUser);
+  const setAuth = useAuthStore(state => state.setAuth);
+  const setToken = useAuthStore(state => state.setToken);
 
   const useSignInUser = CreatePostMutationHook({
     endpoint: '/auth/login',
@@ -30,8 +35,8 @@ const Signin = () => {
   const { mutateAsync: signIn, isPending } = useSignInUser();
 
   const handleSignIn = async () => {
+    setIsLoading(true);
     setFormError(null);
-
     if (!email.trim() || !password) {
       setFormError('Please enter both email and password.');
       return;
@@ -45,13 +50,36 @@ const Signin = () => {
     try {
       const response = await signIn(form);
 
-      if (response) {
-        router.push('/');
-      } else {
-        setFormError('Sign in failed. Please try again.');
+      // extract token from response (server returns { message, code, data: <token> })
+      const token = response?.data ?? response;
+      if (!token) {
+        setFormError('Sign in did not return a token.');
+        return;
       }
+
+      // save token immediately so subsequent requests can use it
+      const tokenStr = typeof token === 'string' ? token : String(token);
+      setToken(tokenStr);
+
+      // fetch current user with the token
+      try {
+        const userResp = await AxiosInstance.get('/user/me', {
+          headers: { Authorization: `Bearer ${tokenStr}` },
+        });
+        const user = userResp?.data?.data ?? userResp?.data;
+        if (user) {
+          setUser(user);
+          setAuth(user, tokenStr);
+        }
+      } catch (err) {
+        console.error('Failed to fetch current user after login', err);
+      }
+
+      router.push('/');
     } catch (error) {
       setFormError('Sign in failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -206,7 +234,7 @@ const Signin = () => {
               <button
                 type="button"
                 onClick={handleSignIn}
-                disabled={isPending}
+                disabled={isPending || isLoading}
                 className="w-full bg-[#334EAC] hover:bg-[#24377d] rounded-md text-white h-14 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isPending ? 'Signing in...' : 'Sign In'}

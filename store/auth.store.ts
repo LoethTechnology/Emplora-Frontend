@@ -1,22 +1,18 @@
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-}; //basic user type, can be extended with more fields as needed
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import type { UserDto } from './user.store';
 
 type AuthState = {
-  user: User | null;
+  user: UserDto | null;
   token: string | null;
   isAuthenticated: boolean;
 };
 
 type AuthActions = {
-  setAuth: (user: User, token: string) => void;
+  setAuth: (user: UserDto, token: string) => void;
+  setToken: (token: string) => void;
   clearAuth: () => void;
-  updateUser: (partial: Partial<User>) => void;
+  updateUser: (partial: Partial<UserDto>) => void;
 };
 
 const initialState: AuthState = {
@@ -27,26 +23,28 @@ const initialState: AuthState = {
 
 export const useAuthStore = create<AuthState & AuthActions>()(
   persist(
-    (set) => ({
+    set => ({
       ...initialState,
 
       setAuth: (user, token) => set({ user, token, isAuthenticated: true }),
 
+      setToken: token => set(state => ({ ...state, token })),
+
       clearAuth: () => set(initialState),
 
-      updateUser: (partial) =>
-        set((state) => ({
+      updateUser: partial =>
+        set(state => ({
           user: state.user ? { ...state.user, ...partial } : null,
         })),
     }),
     {
-      name: "auth-store",
+      name: 'auth-store',
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
+      partialize: state => ({
         user: state.user,
         token: state.token,
         isAuthenticated: state.isAuthenticated,
       }),
-    },
-  ),
+    }
+  )
 );

@@ -6,25 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import signinLogo from '@/images/signin/signinLogo.png';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
-
-const COUNTRY_CODES = [
-  { code: '+234', iso: 'ng', name: 'Nigeria' },
-  { code: '+1', iso: 'us', name: 'USA' },
-  { code: '+44', iso: 'gb', name: 'UK' },
-  { code: '+233', iso: 'gh', name: 'Ghana' },
-  { code: '+27', iso: 'za', name: 'South Africa' },
-];
-
-const FlagImg = ({ iso }: { iso: string }) => (
-  <img
-    src={`https://flagcdn.com/w20/${iso}.png`}
-    srcSet={`https://flagcdn.com/w40/${iso}.png 2x`}
-    width={20}
-    height={14}
-    alt={iso.toUpperCase()}
-    className="rounded-sm object-cover"
-  />
-);
+import { useUserStore } from '@/store/user.store';
 
 const passwordRequirements = [
   { label: 'At least 8 characters', regex: /.{8,}/ },
@@ -40,15 +22,17 @@ const passwordRequirements = [
 const Register = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [linkedinUrl, setLinkedinUrl] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [countryCode, setCountryCode] = useState(COUNTRY_CODES[0]);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [agreementsAccepted, setAgreementsAccepted] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+
+  const setUser = useUserStore(state => state.setUser);
 
   const useRegisterUser = CreatePostMutationHook({
     endpoint: '/user',
@@ -60,7 +44,7 @@ const Register = () => {
   const handleRegister = async () => {
     setFormError(null);
 
-    if (!email.trim() || !phone.trim() || !password || !confirmPassword) {
+    if (!email.trim() || !firstName.trim() || !lastName.trim() || !password || !confirmPassword) {
       setFormError('Please complete all fields before continuing.');
       return;
     }
@@ -77,18 +61,22 @@ const Register = () => {
 
     const form = {
       email: email.trim(),
-      phone: `${countryCode.code}${phone.trim()}`,
+      first_name: firstName.trim(),
+      last_name: lastName.trim(),
+      linkedin_profile_url: linkedinUrl.trim(),
       password,
     };
 
     try {
       const response = await createAccount(form);
+      const payload = response?.data ?? response;
+      const user = payload?.data ?? payload;
 
-      if (response) {
-        router.push('/verify-email');
-      } else {
-        setFormError('Registration failed. Please try again.');
+      if (user) {
+        setUser(user);
       }
+
+      router.push('/');
     } catch (error) {
       setFormError('Registration failed. Please try again.');
     }
@@ -139,58 +127,44 @@ const Register = () => {
               </div>
             </div>
 
-            {/* Phone Number */}
+            {/* First Name */}
             <div className="mb-[15px]">
-              <label className="font-medium">Phone Number</label>
-              <div className="flex items-center border-[#e7e5e5] border rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac] overflow-visible relative">
-                {/* Country code selector */}
-                <button
-                  type="button"
-                  className="flex items-center gap-1 pl-3 pr-2 py-2.5 border-r border-[#e7e5e5] text-sm shrink-0 bg-white"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
-                  <FlagImg iso={countryCode.iso} />
-                  <span>{countryCode.code}</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="h-3 w-3 text-gray-500"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-
-                {dropdownOpen && (
-                  <div className="absolute top-full left-0 mt-1 bg-white border border-[#e7e5e5] rounded-[6px] shadow-md z-10 w-44">
-                    {COUNTRY_CODES.map(c => (
-                      <button
-                        key={c.code}
-                        type="button"
-                        className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 text-left"
-                        onClick={() => {
-                          setCountryCode(c);
-                          setDropdownOpen(false);
-                        }}
-                      >
-                        <FlagImg iso={c.iso} />
-                        <span>{c.name}</span>
-                        <span className="ml-auto text-gray-400">{c.code}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-
+              <label className="font-medium">First Name</label>
+              <div className="flex items-center border-[#e7e5e5] border py-2.5 pl-[10px] rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
                 <input
-                  type="tel"
-                  placeholder="Enter your phone number"
-                  value={phone}
-                  onChange={e => setPhone(e.target.value)}
-                  className="ml-2 outline-none border-none focus:ring-0 w-full py-2.5 mr-3 bg-white"
+                  type="text"
+                  placeholder="Enter your first name"
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
+                  className="ml-1.5 outline-none border-none focus:ring-0 w-full bg-white"
+                />
+              </div>
+            </div>
+
+            {/* Last Name */}
+            <div className="mb-[15px]">
+              <label className="font-medium">Last Name</label>
+              <div className="flex items-center border-[#e7e5e5] border py-2.5 pl-[10px] rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
+                <input
+                  type="text"
+                  placeholder="Enter your last name"
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
+                  className="ml-1.5 outline-none border-none focus:ring-0 w-full bg-white"
+                />
+              </div>
+            </div>
+
+            {/* LinkedIn URL */}
+            <div className="mb-[15px]">
+              <label className="font-medium">LinkedIn URL</label>
+              <div className="flex items-center border-[#e7e5e5] border py-2.5 pl-[10px] rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
+                <input
+                  type="url"
+                  placeholder="Enter your LinkedIn profile URL"
+                  value={linkedinUrl}
+                  onChange={e => setLinkedinUrl(e.target.value)}
+                  className="ml-1.5 outline-none border-none focus:ring-0 w-full bg-white"
                 />
               </div>
             </div>
