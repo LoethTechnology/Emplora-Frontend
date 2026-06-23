@@ -16,7 +16,6 @@ import {
 import { Button } from '../ui/button';
 import LogoutModal from '../LogoutModal';
 import { ChevronDown, HelpCircle, Heart, LogOut, User2, PenLine, Search, Bell } from 'lucide-react';
-import { cookies } from 'next/headers';
 import { useAuthStore } from '@/store/auth.store';
 import { useRouter } from 'next/navigation';
 
