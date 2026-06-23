@@ -7,16 +7,31 @@ import { usePathname } from 'next/navigation'; // Imported to detect the current
 import RegisterBtn from '@/components/buttons/registerBtn';
 import SignInBtn from '@/components/buttons/signInBtn';
 import { useUserStore } from '@/store/user.store';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import { Button } from '../ui/button';
+import LogoutModal from '../LogoutModal';
+import { ChevronDown, HelpCircle, Heart, LogOut, User2, PenLine, Search, Bell } from 'lucide-react';
+import { useAuthStore } from '@/store/auth.store';
+import { useRouter } from 'next/navigation';
 
 // Creating the navbar component
 const Navbar = ({ variant = 'default' }) => {
   // Setting the states
   const [isOpen, setIsOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
   const [atTop, setAtTop] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const authStore = useAuthStore();
 
   // Hook to get the current URL pathname
   const pathname = usePathname();
+  const router = useRouter();
 
   const [lastScrollTop, setLastScrollTop] = useState(0);
   useEffect(() => {
@@ -67,6 +82,20 @@ const Navbar = ({ variant = 'default' }) => {
 
   const user = useUserStore(state => state.user);
 
+  const handleLogoutConfirm = async () => {
+    setLoading(true);
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      authStore.clearAuth();
+      router.replace('/signin');
+    } catch (error) {
+      console.error('errorlogging out:', error);
+    } finally {
+      setLoading(false);
+      setLogoutOpen(false);
+    }
+  };
+
   // Helper function to build dynamic class names for mobile drawer links based on active state
   const getMobileLinkClass = (path: string) => {
     const isActive = pathname === path;
@@ -82,8 +111,7 @@ const Navbar = ({ variant = 'default' }) => {
     }
     return email?.trim()?.[0]?.toUpperCase() ?? 'U';
   };
-
-  console.log(user, 'user');
+  const userName = user?.first_name + ' ' + user?.last_name;
 
   // Rendering the navbar component
   return (
@@ -128,9 +156,66 @@ const Navbar = ({ variant = 'default' }) => {
           {/* 3. Desktop Buttons */}
           <div className="hidden min-[854px]:flex items-center gap-3">
             {user ? (
-              <div className="h-10 w-10 rounded-full bg-[#334EAC] text-white text-sm flex items-center justify-center font-semibold uppercase">
-                {getInitials(user.first_name, user.last_name, user.email)}
-              </div>
+              // <div className="h-10 w-10 rounded-full bg-[#334EAC] text-white text-sm flex items-center justify-center font-semibold uppercase">
+              //   {getInitials(user.first_name, user.last_name, user.email)}
+              // </div>
+              <>
+                <Button variant={'outline'}>
+                  <Search color="#727272 " className="size-5" />
+                </Button>
+                <Button variant={'outline'}>
+                  <Bell color="#727272" className="size-5" />
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex gap-3 border-none py-6">
+                      <div className="bg-[#F2F2F2] p-3 rounded-full">
+                        <User2 className="size-6" color="#727272" />
+                      </div>
+                      <p className="text-lg text-text-secondary"> {userName}</p>
+                      <ChevronDown />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem className="flex gap-3 rounded-md px-3 py-3 text-secondary border-b pb-4">
+                      <div className="bg-[#F2F2F2] p-3 rounded-full">
+                        <User2 className="size-6" color="#727272" />
+                      </div>
+                      <div>
+                        <p className="text-lg text-text-primary"> {userName}</p>
+                        <p className="text-text-secondary">user</p>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex gap-3 rounded-md px-3 py-3 text-secondary">
+                      <User2 className="size-5" color="#727272" />
+
+                      <span className="text-text-secondary">My Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex gap-3 rounded-md px-3 py-3 text-secondary">
+                      <PenLine className="size-5" color="#727272" />
+
+                      <span className="text-text-secondary">My Reviews</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex gap-3 rounded-md px-3 py-3 text-text-secondary">
+                      <Heart className="size-5" color="#727272" />
+
+                      <span className="text-text-secondary">Saved Company</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex gap-3 rounded-md px-3 py-3 text-text-secondary">
+                      <HelpCircle className="size-5" color="#727272" />
+
+                      <span className="text-text-secondary">Help</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="flex gap-3 rounded-md px-3 py-3 border-t border-border text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      onSelect={() => setLogoutOpen(true)}
+                    >
+                      <LogOut className="size-5" color="#D42620" />
+                      <span className="text-destructive">Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
             ) : (
               <>
                 <div>
@@ -163,6 +248,13 @@ const Navbar = ({ variant = 'default' }) => {
           </div>
         </div>
       </nav>
+
+      <LogoutModal
+        open={logoutOpen}
+        onOpenChange={setLogoutOpen}
+        onConfirm={handleLogoutConfirm}
+        loading={loading}
+      />
 
       {/* --- MOBILE SIDEBAR DRAWER --- */}
       {/* Overlay background */}

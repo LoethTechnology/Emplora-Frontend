@@ -6,7 +6,7 @@ import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import signinLogo from '@/images/signin/signinLogo.png';
+import signinLogo from '@/images/signin/signinLogo.jpg';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
 import { useUserStore } from '@/store/user.store';
 import { useAuthStore } from '@/store/auth.store';
@@ -59,6 +59,12 @@ const Signin = () => {
 
       // save token immediately so subsequent requests can use it
       const tokenStr = typeof token === 'string' ? token : String(token);
+
+      await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: tokenStr }),
+      });
       setToken(tokenStr);
 
       // fetch current user with the token

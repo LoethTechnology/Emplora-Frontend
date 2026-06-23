@@ -18,6 +18,8 @@ import reviewAndRatings from '@/components/frequentlyAskedQuetions/reviewAndrati
 
 // Importing the faq loader
 import FaqLoader from '@/components/faqLoader/faqLoader';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 // Creating the home component
 const Home = () => {
@@ -191,10 +193,12 @@ const Home = () => {
 
             {/* Main Heading */}
             <div className="max-w-5xl mx-auto mt-2.5">
-              <button className="text-white h-12.5 text-[15px] bg-[#334EAC] px-7.5 rounded-[5px] hover:bg-[#1e2e6b] transition-colors duration-1000 ease-in-out">
-                {' '}
-                Write a review{' '}
-              </button>
+              <Link href="/search-company">
+                <button className="text-white h-12.5 text-[15px] bg-[#334EAC] px-7.5 rounded-[5px] hover:bg-[#1e2e6b] transition-colors duration-1000 ease-in-out">
+                  {' '}
+                  Write a review{' '}
+                </button>
+              </Link>
             </div>
           </div>
         </section>
