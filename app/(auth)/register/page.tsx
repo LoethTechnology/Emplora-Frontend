@@ -4,7 +4,7 @@ import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import signinLogo from '@/images/signin/signinLogo.png';
+import signinLogo from '@/images/signin/signinLogo.jpg';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
 import { useUserStore } from '@/store/user.store';
 
