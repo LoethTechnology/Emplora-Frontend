@@ -86,7 +86,8 @@ const Navbar = ({ variant = 'default' }) => {
     setLoading(true);
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
-      authStore.clearAuth();
+      useAuthStore.getState().clearAuth();
+      useUserStore.getState().clearUser();
       router.replace('/signin');
     } catch (error) {
       console.error('errorlogging out:', error);
@@ -156,9 +157,6 @@ const Navbar = ({ variant = 'default' }) => {
           {/* 3. Desktop Buttons */}
           <div className="hidden min-[854px]:flex items-center gap-3">
             {user ? (
-              // <div className="h-10 w-10 rounded-full bg-[#334EAC] text-white text-sm flex items-center justify-center font-semibold uppercase">
-              //   {getInitials(user.first_name, user.last_name, user.email)}
-              // </div>
               <>
                 <Button variant={'outline'}>
                   <Search color="#727272 " className="size-5" />
