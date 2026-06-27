@@ -4,11 +4,9 @@ import type { NextRequest } from 'next/server';
 const PUBLIC_ONLY_ROUTES = ['/signin', '/register', '/forgot-password'];
 const PROTECTED_ROUTES = ['/dashboard', '/profile', '/settings'];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('access_token')?.value;
-
-  console.log(token, 'token');
   const isPublicOnly = PUBLIC_ONLY_ROUTES.some(r => pathname.startsWith(r));
   const isProtected = PROTECTED_ROUTES.some(r => pathname.startsWith(r));
 
