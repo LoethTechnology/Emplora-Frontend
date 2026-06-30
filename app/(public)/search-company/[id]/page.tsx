@@ -11,6 +11,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ReactNode } from 'react';
 import { ChevronDown, MessageCircleMore, Star, UsersRound, Plus } from 'lucide-react';
 import ReviewCard from '../../../../components/searchCompany/ReviewCard';
+import { useParams } from 'next/navigation';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +29,16 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import ReportModal from '@/components/searchCompany/ReportModal';
+import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
+import { Button } from '@/components/ui/button';
+
+type CreateReviewPayload = {
+  body: string;
+  overall_rating: number;
+  employment_context: string;
+  would_recommend: boolean;
+  location_id: string;
+};
 
 export type ReviewCategory =
   | 'all'
@@ -102,6 +113,27 @@ const CompanyProfile = () => {
   const [activeCategory, setActiveCategory] = useState<ReviewCategory>('all');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const params = useParams();
+
+  const companyId = params.id as string;
+
+  const useCreateReview = CreatePostMutationHook<CreateReviewPayload>({
+    endpoint: '/reviews',
+  });
+
+  const { mutate: createReview, isPending, error } = useCreateReview({ query: { companyId } });
+
+  const errorMessage = (() => {
+    if (!error) return null;
+
+    const message = error.response?.data?.message;
+
+    if (Array.isArray(message)) {
+      return message.join(', ');
+    }
+
+    return message ?? error.message;
+  })();
 
   // --- FIGMA MULTI-CRITERIA REVIEW STATES ---
   const [ratings, setRatings] = useState({
@@ -121,15 +153,20 @@ const CompanyProfile = () => {
   // --- COMPONENT HANDLERS ---
   const handleReviewSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Review Submitted:', { ratings, reviewText });
-    setIsModalOpen(false);
-    setRatings({
-      workEnvironment: 0,
-      salaryBenefits: 0,
-      management: 0,
-      careerGrowth: 0,
+
+    const ratingValues = Object.values(ratings).filter(r => r > 0);
+
+    const overallRating = Math.round(
+      ratingValues.reduce((sum, rating) => sum + rating, 0) / ratingValues.length
+    );
+
+    createReview({
+      body: reviewText,
+      overall_rating: overallRating,
+      employment_context: '',
+      would_recommend: true,
+      location_id: '',
     });
-    setReviewText('');
   };
 
   const handleReportSubmit = (e: React.FormEvent) => {
@@ -290,12 +327,16 @@ const CompanyProfile = () => {
                         </div>
 
                         <div className="w-full pt-2">
-                          <button
+                          <Button
                             type="submit"
+                            disabled={isPending}
                             className="w-full py-3 text-sm font-medium text-white bg-primary hover:bg-primary/95 rounded-lg transition-colors"
                           >
                             Submit Review
-                          </button>
+                          </Button>
+                          {errorMessage && (
+                            <p className="mt-3 text-sm text-red-500">{errorMessage}</p>
+                          )}
                         </div>
                       </form>
                     </DialogContent>
