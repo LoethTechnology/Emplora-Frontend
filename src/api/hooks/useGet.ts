@@ -1,8 +1,8 @@
-import { useAuthStore } from "@/store/auth.store";
-import { CreateGetQueryHookArgs } from "./hooks.types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import AxiosInstance from "../configs";
-import { useEffect } from "react";
+import { useAuthStore } from '@/store/auth.store';
+import { CreateGetQueryHookArgs } from './hooks.types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import AxiosInstance from '../configs';
+import { useEffect } from 'react';
 
 export function CreateGetQueryHook<
   TData,
@@ -28,14 +28,14 @@ export function CreateGetQueryHook<
     route?: RouteParams;
     headers?: Record<string, string | undefined>;
   }) {
-    const token = useAuthStore((state) => state.token);
+    const token = useAuthStore(state => state.token);
     const queryClient = useQueryClient();
     const queryFn = async (): Promise<TData> => {
       let url = endpoint;
       if (params?.route) {
         url = Object.entries(params.route).reduce(
           (acc, [key, value]) => acc.replaceAll(`:${key}`, String(value)),
-          endpoint,
+          endpoint
         );
       }
 
@@ -43,13 +43,14 @@ export function CreateGetQueryHook<
       if (params?.query) {
         const query = new URLSearchParams();
         Object.entries(params.query).forEach(([key, value]) => {
-          if (value === undefined || value === null || value === "") return;
+          if (value === undefined || value === null || value === '') return;
           query.append(key, String(value));
         });
         if (query.toString()) {
           url += `?${query.toString()}`;
         }
       }
+      console.log('Hitting:', AxiosInstance.defaults.baseURL + url);
 
       const headers = {
         ...params?.headers,
