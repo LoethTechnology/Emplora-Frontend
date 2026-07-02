@@ -218,7 +218,7 @@ const SearchCompany = () => {
                     results.map((company: any) => (
                       <Link
                         key={company.id}
-                        href={`/company/${company.id}`}
+                        href={`/search-company/${company.id}`}
                         className="block px-4 py-3 hover:bg-gray-100 transition-colors border-b last:border-b-0"
                       >
                         <div className="font-medium text-gray-900">{company.name}</div>
