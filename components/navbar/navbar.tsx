@@ -15,7 +15,17 @@ import {
 } from '../ui/dropdown-menu';
 import { Button } from '../ui/button';
 import LogoutModal from '../LogoutModal';
-import { ChevronDown, HelpCircle, Heart, LogOut, User2, PenLine, Search, Bell } from 'lucide-react';
+import {
+  ChevronDown,
+  HelpCircle,
+  Heart,
+  LogOut,
+  User2,
+  PenLine,
+  Search,
+  Bell,
+  PlusIcon,
+} from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import { useRouter } from 'next/navigation';
 
@@ -158,8 +168,8 @@ const Navbar = ({ variant = 'default' }) => {
           <div className="hidden min-[854px]:flex items-center gap-3">
             {user ? (
               <>
-                <Button variant={'outline'}>
-                  <Search color="#727272 " className="size-5" />
+                <Button variant={'outline'} onClick={() => router.push('/create-company')}>
+                  <PlusIcon color="#727272 " className="size-5" />
                 </Button>
                 <Button variant={'outline'}>
                   <Bell color="#727272" className="size-5" />
