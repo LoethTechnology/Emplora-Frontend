@@ -243,7 +243,7 @@ const Signin = () => {
                 disabled={isPending || isLoading}
                 className="w-full bg-[#334EAC] hover:bg-[#24377d] rounded-md text-white h-14 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isPending ? 'Signing in...' : 'Sign In'}
+                {isPending || isLoading ? 'Signing in...' : 'Sign In'}
               </button>
             </div>
 
