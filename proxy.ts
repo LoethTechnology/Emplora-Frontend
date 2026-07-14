@@ -7,7 +7,6 @@ const PROTECTED_ROUTES = ['/profile', '/settings'];
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('access_token')?.value;
-  console.log('tokend', token);
   const isPublicOnly = PUBLIC_ONLY_ROUTES.some(r => pathname.startsWith(r));
   const isProtected = PROTECTED_ROUTES.some(r => pathname.startsWith(r));
 
@@ -15,7 +14,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/signin', request.url));
   }
 
-  if (isPublicOnly && !token) {
+  if (isPublicOnly && token) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
