@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment } from 'react';
+import { Fragment, useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -9,6 +9,7 @@ import Footer from '@/components/footer/footer';
 import { Button } from '@/components/ui/button';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
 import { CreateCompanyInput, createCompanySchema } from '@/src/schema/company.schema';
+import axios from 'axios';
 
 const CreateCompany = () => {
   const {
@@ -20,6 +21,9 @@ const CreateCompany = () => {
     resolver: zodResolver(createCompanySchema),
     mode: 'onBlur',
   });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const successTimeoutRef = useRef<number | null>(null);
 
   const useCreateCompany = CreatePostMutationHook({
     endpoint: '/companies',
@@ -28,16 +32,40 @@ const CreateCompany = () => {
   const { mutateAsync: createCompany } = useCreateCompany();
 
   const onSubmit = async (data: CreateCompanyInput) => {
+    setError('');
+
     try {
-      console.log('Create company payload:', data);
       await createCompany(data);
       reset();
-      alert('Company profile created successfully.');
+      setError('');
+      setSuccess('Company profile created successfully.');
+
+      if (successTimeoutRef.current) {
+        window.clearTimeout(successTimeoutRef.current);
+      }
+
+      successTimeoutRef.current = window.setTimeout(() => {
+        setSuccess('');
+        successTimeoutRef.current = null;
+      }, 3000);
     } catch (error) {
-      console.error(error);
-      alert('Something went wrong. Please try again.');
+      if (axios.isAxiosError(error)) {
+        const statusCode = error.response?.status; // 401
+        const errorMessage =
+          statusCode === 401
+            ? 'You need to be logged in to create a company.'
+            : 'Something went wrong.';
+        setError(errorMessage);
+        console.error(error);
+      }
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (successTimeoutRef.current) window.clearTimeout(successTimeoutRef.current);
+    };
+  }, []);
 
   return (
     <Fragment>
@@ -114,7 +142,7 @@ const CreateCompany = () => {
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={() => handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label className="space-y-2 text-sm font-medium text-[#0F172A]">
                     Company name
@@ -222,6 +250,24 @@ const CreateCompany = () => {
                     <p className="text-xs text-[#DC2626]">{errors.headquarters.message}</p>
                   )}
                 </label>
+
+                {success ? (
+                  <p
+                    role="status"
+                    className="rounded-2xl border border-[#D1FAE5] bg-[#ECFDF5] px-4 py-3 text-sm text-[#059669]"
+                  >
+                    {success}
+                  </p>
+                ) : null}
+
+                {error ? (
+                  <p
+                    role="alert"
+                    className="rounded-2xl border border-[#FECACA] bg-[#FEF2F2] px-4 py-3 text-sm text-[#DC2626]"
+                  >
+                    {error}
+                  </p>
+                ) : null}
 
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
