@@ -11,6 +11,212 @@ import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
 import { CreateCompanyInput, createCompanySchema } from '@/src/schema/company.schema';
 import axios from 'axios';
 
+const INDUSTRY_OPTIONS = [
+  'Technology',
+  'Finance',
+  'Healthcare',
+  'Education',
+  'Manufacturing',
+  'Retail',
+  'Agriculture',
+  'Other',
+] as const;
+
+const COUNTRY_OPTIONS = [
+  'Nigeria',
+  'Afghanistan',
+  'Albania',
+  'Algeria',
+  'Andorra',
+  'Angola',
+  'Antigua and Barbuda',
+  'Argentina',
+  'Armenia',
+  'Australia',
+  'Austria',
+  'Azerbaijan',
+  'Bahamas',
+  'Bahrain',
+  'Bangladesh',
+  'Barbados',
+  'Belarus',
+  'Belgium',
+  'Belize',
+  'Benin',
+  'Bhutan',
+  'Bolivia',
+  'Bosnia and Herzegovina',
+  'Botswana',
+  'Brazil',
+  'Brunei',
+  'Bulgaria',
+  'Burkina Faso',
+  'Burundi',
+  'Cabo Verde',
+  'Cambodia',
+  'Cameroon',
+  'Canada',
+  'Central African Republic',
+  'Chad',
+  'Chile',
+  'China',
+  'Colombia',
+  'Comoros',
+  'Congo',
+  'Costa Rica',
+  'Croatia',
+  'Cuba',
+  'Cyprus',
+  'Czech Republic',
+  'Denmark',
+  'Djibouti',
+  'Dominica',
+  'Dominican Republic',
+  'Ecuador',
+  'Egypt',
+  'El Salvador',
+  'Equatorial Guinea',
+  'Eritrea',
+  'Estonia',
+  'Eswatini',
+  'Ethiopia',
+  'Fiji',
+  'Finland',
+  'France',
+  'Gabon',
+  'Gambia',
+  'Georgia',
+  'Germany',
+  'Ghana',
+  'Greece',
+  'Grenada',
+  'Guatemala',
+  'Guinea',
+  'Guinea-Bissau',
+  'Guyana',
+  'Haiti',
+  'Honduras',
+  'Hungary',
+  'Iceland',
+  'India',
+  'Indonesia',
+  'Iran',
+  'Iraq',
+  'Ireland',
+  'Israel',
+  'Italy',
+  'Jamaica',
+  'Japan',
+  'Jordan',
+  'Kazakhstan',
+  'Kenya',
+  'Kiribati',
+  'Kuwait',
+  'Kyrgyzstan',
+  'Laos',
+  'Latvia',
+  'Lebanon',
+  'Lesotho',
+  'Liberia',
+  'Libya',
+  'Liechtenstein',
+  'Lithuania',
+  'Luxembourg',
+  'Madagascar',
+  'Malawi',
+  'Malaysia',
+  'Maldives',
+  'Mali',
+  'Malta',
+  'Marshall Islands',
+  'Mauritania',
+  'Mauritius',
+  'Mexico',
+  'Micronesia',
+  'Moldova',
+  'Monaco',
+  'Mongolia',
+  'Montenegro',
+  'Morocco',
+  'Mozambique',
+  'Myanmar',
+  'Namibia',
+  'Nauru',
+  'Nepal',
+  'Netherlands',
+  'New Zealand',
+  'Nicaragua',
+  'Niger',
+  'North Macedonia',
+  'Norway',
+  'Oman',
+  'Pakistan',
+  'Palau',
+  'Panama',
+  'Papua New Guinea',
+  'Paraguay',
+  'Peru',
+  'Philippines',
+  'Poland',
+  'Portugal',
+  'Qatar',
+  'Romania',
+  'Russia',
+  'Rwanda',
+  'Saint Kitts and Nevis',
+  'Saint Lucia',
+  'Saint Vincent and the Grenadines',
+  'Samoa',
+  'San Marino',
+  'Sao Tome and Principe',
+  'Saudi Arabia',
+  'Senegal',
+  'Serbia',
+  'Seychelles',
+  'Sierra Leone',
+  'Singapore',
+  'Slovakia',
+  'Slovenia',
+  'Solomon Islands',
+  'Somalia',
+  'South Africa',
+  'South Korea',
+  'South Sudan',
+  'Spain',
+  'Sri Lanka',
+  'Sudan',
+  'Suriname',
+  'Sweden',
+  'Switzerland',
+  'Syria',
+  'Taiwan',
+  'Tajikistan',
+  'Tanzania',
+  'Thailand',
+  'Timor-Leste',
+  'Togo',
+  'Tonga',
+  'Trinidad and Tobago',
+  'Tunisia',
+  'Turkey',
+  'Turkmenistan',
+  'Tuvalu',
+  'Uganda',
+  'Ukraine',
+  'United Arab Emirates',
+  'United Kingdom',
+  'United States',
+  'Uruguay',
+  'Uzbekistan',
+  'Vanuatu',
+  'Vatican City',
+  'Venezuela',
+  'Vietnam',
+  'Yemen',
+  'Zambia',
+  'Zimbabwe',
+] as const;
+
 const CreateCompany = () => {
   const {
     register,
@@ -20,10 +226,64 @@ const CreateCompany = () => {
   } = useForm<CreateCompanyInput>({
     resolver: zodResolver(createCompanySchema),
     mode: 'onBlur',
+    defaultValues: {
+      country: 'Nigeria',
+      industry: 'Technology',
+    },
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const successTimeoutRef = useRef<number | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
+  const [logoError, setLogoError] = useState('');
+  const [logoStatus, setLogoStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const MAX_LOGO_SIZE = 2 * 1024 * 1024; // 2MB
+  const ACCEPTED_LOGO_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
+
+  function validateLogoFile(file: File): string | null {
+    if (!ACCEPTED_LOGO_TYPES.includes(file.type)) {
+      return 'Logo must be a PNG, JPEG, or WEBP image.';
+    }
+    if (file.size > MAX_LOGO_SIZE) {
+      return 'Logo must be smaller than 2MB.';
+    }
+    return null;
+  }
+
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validationError = validateLogoFile(file);
+    if (validationError) {
+      setLogoError(validationError);
+      setLogoFile(null);
+      setLogoPreviewUrl(null);
+      e.target.value = '';
+      return;
+    }
+
+    setLogoError('');
+    setLogoFile(file);
+    setLogoPreviewUrl(URL.createObjectURL(file));
+  };
+
+  const removeLogo = () => {
+    setLogoFile(null);
+    setLogoPreviewUrl(null);
+    setLogoError('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // clean up the object URL so it doesn't leak memory
+  useEffect(() => {
+    return () => {
+      if (logoPreviewUrl) URL.revokeObjectURL(logoPreviewUrl);
+    };
+  }, [logoPreviewUrl]);
 
   const useCreateCompany = CreatePostMutationHook({
     endpoint: '/companies',
@@ -35,8 +295,21 @@ const CreateCompany = () => {
     setError('');
 
     try {
-      await createCompany(data);
+      const formData = new FormData();
+
+      Object.entries(data).forEach(([key, value]) => {
+        if (typeof value === 'string' && value.trim() !== '') {
+          formData.append(key, value.trim());
+        }
+      });
+
+      if (logoFile) {
+        formData.append('logo', logoFile);
+      }
+      await createCompany(formData as unknown as CreateCompanyInput);
+
       reset();
+      removeLogo();
       setError('');
       setSuccess('Company profile created successfully.');
 
@@ -142,7 +415,7 @@ const CreateCompany = () => {
                 </p>
               </div>
 
-              <form onSubmit={() => handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label className="space-y-2 text-sm font-medium text-[#0F172A]">
                     Company name
@@ -157,12 +430,16 @@ const CreateCompany = () => {
 
                   <label className="space-y-2 text-sm font-medium text-[#0F172A]">
                     Industry
-                    <input
-                      type="text"
+                    <select
                       {...register('industry')}
                       className="w-full rounded-2xl border border-[#E2E8F0] bg-[#F8FAFF] px-4 py-3 text-sm text-[#0F172A] outline-none transition focus:border-[#334EAC] focus:ring-2 focus:ring-[#334EAC]/15"
-                      placeholder="Technology"
-                    />
+                    >
+                      {INDUSTRY_OPTIONS.map(option => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
                     {errors.industry && (
                       <p className="text-xs text-[#DC2626]">{errors.industry.message}</p>
                     )}
@@ -197,22 +474,7 @@ const CreateCompany = () => {
                   </label>
 
                   <label className="space-y-2 text-sm font-medium text-[#0F172A]">
-                    Domain
-                    <input
-                      type="text"
-                      {...register('domain')}
-                      className="w-full rounded-2xl border border-[#E2E8F0] bg-[#F8FAFF] px-4 py-3 text-sm text-[#0F172A] outline-none transition focus:border-[#334EAC] focus:ring-2 focus:ring-[#334EAC]/15"
-                      placeholder="acme.com"
-                    />
-                    {errors.domain && (
-                      <p className="text-xs text-[#DC2626]">{errors.domain.message}</p>
-                    )}
-                  </label>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="space-y-2 text-sm font-medium text-[#0F172A]">
-                    LinkedIn URL
+                    LinkedIn URL <span className="font-normal text-[#94A3B8]">(optional)</span>
                     <input
                       type="url"
                       {...register('linkedin_url')}
@@ -223,33 +485,80 @@ const CreateCompany = () => {
                       <p className="text-xs text-[#DC2626]">{errors.linkedin_url.message}</p>
                     )}
                   </label>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label className="space-y-2 text-sm font-medium text-[#0F172A]">
+                    Address
+                    <input
+                      type="text"
+                      {...register('address')}
+                      className="w-full rounded-2xl border border-[#E2E8F0] bg-[#F8FAFF] px-4 py-3 text-sm text-[#0F172A] outline-none transition focus:border-[#334EAC] focus:ring-2 focus:ring-[#334EAC]/15"
+                      placeholder="Plot 1, Lekki Phase 1"
+                    />
+                    {errors.address && (
+                      <p className="text-xs text-[#DC2626]">{errors.address.message}</p>
+                    )}
+                  </label>
 
                   <label className="space-y-2 text-sm font-medium text-[#0F172A]">
-                    Logo URL
-                    <input
-                      type="url"
-                      {...register('logo_url')}
+                    Country
+                    <select
+                      {...register('country')}
                       className="w-full rounded-2xl border border-[#E2E8F0] bg-[#F8FAFF] px-4 py-3 text-sm text-[#0F172A] outline-none transition focus:border-[#334EAC] focus:ring-2 focus:ring-[#334EAC]/15"
-                      placeholder="https://acme.com/logo.png"
-                    />
-                    {errors.logo_url && (
-                      <p className="text-xs text-[#DC2626]">{errors.logo_url.message}</p>
+                    >
+                      {COUNTRY_OPTIONS.map(option => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.country && (
+                      <p className="text-xs text-[#DC2626]">{errors.country.message}</p>
                     )}
                   </label>
                 </div>
 
-                <label className="space-y-2 text-sm font-medium text-[#0F172A] block">
-                  Headquarters
-                  <input
-                    type="text"
-                    {...register('headquarters')}
-                    className="w-full rounded-2xl border border-[#E2E8F0] bg-[#F8FAFF] px-4 py-3 text-sm text-[#0F172A] outline-none transition focus:border-[#334EAC] focus:ring-2 focus:ring-[#334EAC]/15"
-                    placeholder="Lagos, Nigeria"
-                  />
-                  {errors.headquarters && (
-                    <p className="text-xs text-[#DC2626]">{errors.headquarters.message}</p>
+                <div className="space-y-2 text-sm font-medium text-[#0F172A]">
+                  Logo <span className="font-normal text-[#94A3B8]">(optional)</span>
+                  {logoPreviewUrl ? (
+                    <div className="flex items-center gap-3 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFF] px-3">
+                      <div className="flex gap-3 items-center p-3 justify-between w-full">
+                        <div className="flex gap-2 items-center">
+                          <p className="truncate text-sm text-[#0F172A]">{logoFile?.name}</p>
+                          <p className="text-xs text-[#64748B]">
+                            {logoFile && (logoFile.size / 1024).toFixed(0)} KB
+                          </p>
+                        </div>
+                        {logoStatus === 'uploading' && (
+                          <p className="text-xs text-[#334EAC]">Uploading…</p>
+                        )}
+                        {logoStatus === 'success' && (
+                          <p className="text-xs text-[#059669]">Uploaded</p>
+                        )}
+                        {logoStatus === 'error' && (
+                          <p className="text-xs text-[#DC2626]">Upload failed</p>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={removeLogo}
+                        className="text-xs font-medium text-[#DC2626] hover:underline"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/png, image/jpeg, image/webp"
+                      onChange={handleLogoChange}
+                      className="w-full rounded-2xl border border-[#E2E8F0] bg-[#F8FAFF] px-4 py-3 text-sm text-[#0F172A] outline-none transition focus:border-[#334EAC] focus:ring-2 focus:ring-[#334EAC]/15"
+                    />
                   )}
-                </label>
+                  {logoError && <p className="text-xs text-[#DC2626]">{logoError}</p>}
+                </div>
 
                 {success ? (
                   <p
