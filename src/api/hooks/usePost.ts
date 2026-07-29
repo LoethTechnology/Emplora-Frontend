@@ -48,9 +48,12 @@ export function CreatePostMutationHook<TData>({
           url += `?${query.toString()}`;
         }
       }
+      const isFormData = data instanceof FormData;
+
       const headers = {
         ...customHeaders,
         ...(requiresAuth ? { Authorization: `Bearer ${token}` } : {}),
+        ...(isFormData ? { 'Content-Type': undefined } : {}),
       };
       const response = AxiosInstance.post(url, data, {
         headers,

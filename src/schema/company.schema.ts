@@ -28,12 +28,6 @@ export const createCompanySchema = z.object({
 
   website_url: z.string().trim().url('Enter a valid URL, e.g. https://acme.com'),
 
-  domain: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .regex(/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/, 'Enter a valid domain, e.g. acme.com'),
-
   linkedin_url: z
     .string()
     .trim()
@@ -42,9 +36,8 @@ export const createCompanySchema = z.object({
     .optional()
     .or(z.literal('')), // lets an empty input pass if not required
 
-  logo_url: z.string().trim().url('Enter a valid image URL').optional().or(z.literal('')),
-
-  headquarters: z.string().trim().min(2, 'Enter a location'),
+  country: z.string().trim().min(2, 'Select a country'),
+  address: z.string().trim().min(2, 'Enter a location'),
 
   industry: z.enum(industries, {
     error: 'Select an industry',
