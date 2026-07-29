@@ -305,12 +305,61 @@ const Navbar = ({ variant = 'default' }) => {
 
           <div className="mt-auto pb-10 flex flex-col gap-4 text-lg font-medium text-gray-700">
             {user ? (
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-[#334EAC] text-white flex items-center justify-center font-semibold uppercase">
-                  {getInitials(user.first_name, user.last_name)}
+              <>
+                <Button variant={'outline'} onClick={() => router.push('/create-company')}>
+                  <PlusIcon color="#727272 " className="size-5" />
+                </Button>
+                <Button variant={'outline'}>
+                  <Bell color="#727272" className="size-5" />
+                </Button>
+                <div className="flex items-center gap-3 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFF] px-3 py-3">
+                  <div className="h-10 w-10 rounded-full bg-[#334EAC] text-white flex items-center justify-center font-semibold uppercase">
+                    {getInitials(user.first_name, user.last_name)}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[#0F172A]">Hi, {user.first_name}</p>
+                    <p className="text-sm text-[#64748B]">{user.email}</p>
+                  </div>
                 </div>
-                <span>Hi, {user.first_name}</span>
-              </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="justify-between rounded-2xl border-[#E2E8F0] bg-white"
+                    >
+                      <span>Account actions</span> <ChevronDown className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-56 z-80">
+                    <DropdownMenuItem className="flex gap-3 rounded-md px-3 py-3 text-secondary">
+                      <User2 className="size-5" color="#727272" />
+                      <span className="text-text-secondary">My Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex gap-3 rounded-md px-3 py-3 text-secondary">
+                      <PenLine className="size-5" color="#727272" />
+                      <span className="text-text-secondary">My Reviews</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex gap-3 rounded-md px-3 py-3 text-text-secondary">
+                      <Heart className="size-5" color="#727272" />
+                      <span className="text-text-secondary">Saved Company</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex gap-3 rounded-md px-3 py-3 text-text-secondary">
+                      <HelpCircle className="size-5" color="#727272" />
+                      <span className="text-text-secondary">Help</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="flex gap-3 rounded-md px-3 py-3 border-t border-border text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      onSelect={() => {
+                        setIsOpen(false);
+                        setLogoutOpen(true);
+                      }}
+                    >
+                      <LogOut className="size-5" color="#D42620" />
+                      <span className="text-destructive">Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
             ) : (
               <>
                 <div>
