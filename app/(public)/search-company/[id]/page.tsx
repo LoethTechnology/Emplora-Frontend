@@ -31,6 +31,8 @@ import {
 import ReportModal from '@/components/searchCompany/ReportModal';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
 import { Button } from '@/components/ui/button';
+import { CreateGetQueryHook } from '@/src/api/hooks/useGet';
+import { Company, CompanyApiResponse } from '@/src/types/company.types';
 
 type CreateReviewPayload = {
   body: string;
@@ -121,7 +123,14 @@ const CompanyProfile = () => {
     endpoint: '/reviews',
   });
 
+  const useGetCompanyInfo = CreateGetQueryHook<CompanyApiResponse>({
+    endpoint: '/reviews',
+    queryKey: ['company-info'],
+  });
+
   const { mutate: createReview, isPending, error } = useCreateReview({ query: { companyId } });
+
+  const { data, isLoading, error: companyError } = useGetCompanyInfo({ query: { companyId } });
 
   const errorMessage = (() => {
     if (!error) return null;

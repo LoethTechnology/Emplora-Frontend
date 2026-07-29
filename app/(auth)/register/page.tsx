@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import signinLogo from '@/images/signin/signinLogo.jpg';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
 import { useUserStore } from '@/store/user.store';
+import { AxiosError } from 'axios';
 
 const passwordRequirements = [
   { label: 'At least 8 characters', regex: /.{8,}/ },
@@ -76,9 +77,13 @@ const Register = () => {
         setUser(user);
       }
 
-      router.push('/');
-    } catch (error) {
-      setFormError('Registration failed. Please try again.');
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        setFormError(error?.response?.data.message || 'Registration failed. Please try again.');
+      } else {
+        setFormError('Registration failed. Please try again.');
+      }
     }
   };
 
@@ -94,15 +99,15 @@ const Register = () => {
         <section className="place-items-center flex flex-col h-full w-full lg:w-1/2 overflow-y-auto">
           <div className="flex flex-col justify-center w-full px-6 py-8 max-w-md mx-auto">
             {/* Header */}
-            <div className="text-center mb-[20px]">
+            <div className="text-center mb-5">
               <h2 className="font-bold text-black text-2xl">Create an account</h2>
-              <p className="mt-[4px]">Kindly enter the correct details to create your account.</p>
+              <p className="mt-1">Kindly enter the correct details to create your account.</p>
             </div>
 
             {/* Email */}
-            <div className="mb-[15px]">
+            <div className="mb-3.75">
               <label className="font-medium">Email Address</label>
-              <div className="flex items-center border-[#e7e5e5] border py-2.5 pl-[10px] rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
+              <div className="flex items-center border-[#e7e5e5] border py-2.5 pl-2.5 rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -128,9 +133,9 @@ const Register = () => {
             </div>
 
             {/* First Name */}
-            <div className="mb-[15px]">
+            <div className="mb-3.75">
               <label className="font-medium">First Name</label>
-              <div className="flex items-center border-[#e7e5e5] border py-2.5 pl-[10px] rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
+              <div className="flex items-center border-[#e7e5e5] border py-2.5 pl-2.5 rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
                 <input
                   type="text"
                   placeholder="Enter your first name"
@@ -142,9 +147,9 @@ const Register = () => {
             </div>
 
             {/* Last Name */}
-            <div className="mb-[15px]">
+            <div className="mb-3.75">
               <label className="font-medium">Last Name</label>
-              <div className="flex items-center border-[#e7e5e5] border py-2.5 pl-[10px] rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
+              <div className="flex items-center border-[#e7e5e5] border py-2.5 pl-2.5 rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
                 <input
                   type="text"
                   placeholder="Enter your last name"
@@ -156,9 +161,9 @@ const Register = () => {
             </div>
 
             {/* LinkedIn URL */}
-            <div className="mb-[15px]">
+            <div className="mb-3.75">
               <label className="font-medium">LinkedIn URL</label>
-              <div className="flex items-center border-[#e7e5e5] border py-2.5 pl-[10px] rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
+              <div className="flex items-center border-[#e7e5e5] border py-2.5 pl-2.5 rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
                 <input
                   type="url"
                   placeholder="Enter your LinkedIn profile URL"
@@ -170,9 +175,9 @@ const Register = () => {
             </div>
 
             {/* Password */}
-            <div className="mb-[10px]">
+            <div className="mb-2.5">
               <label className="font-medium">Password</label>
-              <div className="flex items-center justify-between border-[#e7e5e5] border py-[10px] pl-[10px] pr-[10px] rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
+              <div className="flex items-center justify-between border-[#e7e5e5] border p-2.5 rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
                 <div className="flex items-center w-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -262,9 +267,9 @@ const Register = () => {
             </div>
 
             {/* Confirm Password */}
-            <div className="mb-[15px] mt-2">
+            <div className="mb-3.75 mt-2">
               <label className="font-medium">Confirm Password</label>
-              <div className="flex items-center justify-between border-[#e7e5e5] border py-[10px] pl-[10px] pr-[10px] rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
+              <div className="flex items-center justify-between border-[#e7e5e5] border p-2.5 rounded-[6px] mt-1 transition-all focus-within:border-[#334eac] focus-within:ring-1 focus-within:ring-[#334eac]">
                 <div className="flex items-center w-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
