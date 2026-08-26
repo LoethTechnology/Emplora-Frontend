@@ -120,15 +120,17 @@ const CompanyProfile = () => {
   const companyId = params.id as string;
 
   const useCreateReview = CreatePostMutationHook<CreateReviewPayload>({
-    endpoint: '/reviews',
-  });
+  endpoint: '/companies/:companyId/reviews',
+});
 
   const useGetCompanyInfo = CreateGetQueryHook<CompanyApiResponse>({
     endpoint: '/reviews',
     queryKey: ['company-info'],
   });
 
-  const { mutate: createReview, isPending, error } = useCreateReview({ query: { companyId } });
+  const { mutate: createReview, isPending, error } = useCreateReview({
+  route: { companyId },
+});
 
   const { data, isLoading, error: companyError } = useGetCompanyInfo({ query: { companyId } });
 
