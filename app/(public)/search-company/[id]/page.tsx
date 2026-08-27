@@ -32,13 +32,39 @@ import ReportModal from '@/components/searchCompany/ReportModal';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
 import { Button } from '@/components/ui/button';
 import { CreateGetQueryHook } from '@/src/api/hooks/useGet';
-import { Company, CompanyApiResponse } from '@/src/types/company.types';
+import { Company } from '@/src/types/company.types';
 
 type CreateReviewPayload = {
   body: string;
   overall_rating: number;
   employment_context: string;
   would_recommend: boolean;
+};
+
+type Review = {
+  id: string;
+  company_id: string;
+  author_id: string;
+  location_id: string | null;
+  body: string;
+  overall_rating: number;
+  employment_context: string;
+  would_recommend: boolean;
+  status: string;
+  published_at: string;
+  created_at: string;
+  updated_at: string;
+};
+
+type ReviewApiResponse = {
+  data: Review[];
+  totalCount: number;
+  limit: number;
+  currentCount: number;
+  page: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
 };
 
 export type ReviewCategory =
@@ -122,9 +148,9 @@ const CompanyProfile = () => {
   endpoint: '/companies/:companyId/reviews',
 });
 
-  const useGetCompanyInfo = CreateGetQueryHook<CompanyApiResponse>({
-    endpoint: '/reviews',
-    queryKey: ['company-info'],
+  const useGetCompanyInfo = CreateGetQueryHook<ReviewApiResponse>({
+  endpoint: '/reviews',
+  queryKey: ['company-info'],
   });
 
   const { mutate: createReview, isPending, error } = useCreateReview({
