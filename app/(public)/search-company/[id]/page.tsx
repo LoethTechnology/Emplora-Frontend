@@ -39,7 +39,6 @@ type CreateReviewPayload = {
   overall_rating: number;
   employment_context: string;
   would_recommend: boolean;
-  location_id: string;
 };
 
 export type ReviewCategory =
@@ -172,12 +171,11 @@ const CompanyProfile = () => {
     );
 
     createReview({
-      body: reviewText,
-      overall_rating: overallRating,
-      employment_context: '',
-      would_recommend: true,
-      location_id: '',
-    });
+  body: reviewText,
+  overall_rating: overallRating,
+  employment_context: '',
+  would_recommend: true,
+});
   };
 
   const handleReportSubmit = (e: React.FormEvent) => {
