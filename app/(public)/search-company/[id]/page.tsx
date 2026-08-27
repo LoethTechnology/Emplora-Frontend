@@ -149,15 +149,15 @@ const CompanyProfile = () => {
 });
 
   const useGetCompanyInfo = CreateGetQueryHook<ReviewApiResponse>({
-  endpoint: '/reviews',
-  queryKey: ['company-info'],
-  });
+  endpoint: '/companies/:companyId/reviews',
+  queryKey: ['company-reviews'],
+});
 
   const { mutate: createReview, isPending, error } = useCreateReview({
   route: { companyId },
 });
 
-  const { data, isLoading, error: companyError } = useGetCompanyInfo({ query: { companyId } });
+  const { data, isLoading, error: companyError } = useGetCompanyInfo({ route: { companyId } });
 
   const errorMessage = (() => {
     if (!error) return null;
