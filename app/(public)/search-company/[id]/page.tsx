@@ -191,11 +191,15 @@ const CompanyProfile = () => {
     setReportingReviewId(null);
   };
 
-  const displayedReviews = dummyData.reviews
-    .filter(review =>
-      activeCategory === 'all' ? true : review.categories.includes(activeCategory)
-    )
-    .sort((a, b) => (sortOrder === 'desc' ? b.rating - a.rating : a.rating - b.rating));
+  const displayedReviews = (data?.data ?? [])
+  .map(review => ({
+    rating: review.overall_rating,
+    text: review.body,
+    date: review.published_at?.split('T')[0] ?? review.created_at?.split('T')[0] ?? '',
+  }))
+  .sort((a, b) =>
+    sortOrder === 'desc' ? b.rating - a.rating : a.rating - b.rating
+  );
 
   return (
     <div className="mb-20 w-full min-h-screen bg-white">
