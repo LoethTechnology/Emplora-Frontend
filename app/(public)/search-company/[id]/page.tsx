@@ -67,6 +67,10 @@ type ReviewApiResponse = {
   hasPrevPage: boolean;
 };
 
+type CompanyApiResponse = {
+  data: Company;
+};
+
 export type ReviewCategory =
   | 'all'
   | 'salary-benefits'
@@ -148,16 +152,28 @@ const CompanyProfile = () => {
   endpoint: '/companies/:companyId/reviews',
 });
 
-  const useGetCompanyInfo = CreateGetQueryHook<ReviewApiResponse>({
+const useGetCompanyInfo = CreateGetQueryHook<CompanyApiResponse>({
+  endpoint: '/companies/:companyId',
+  queryKey: ['company-info'],
+});
+
+const useGetCompanyReviews = CreateGetQueryHook<ReviewApiResponse>({
   endpoint: '/companies/:companyId/reviews',
   queryKey: ['company-reviews'],
+});
+
+const { data: companyData, isLoading: isCompanyLoading, error: companyError } =
+  useGetCompanyInfo({
+    route: { companyId },
+  });
+
+const { data: reviewData, isLoading: isReviewsLoading } = useGetCompanyReviews({
+  route: { companyId },
 });
 
   const { mutate: createReview, isPending, error } = useCreateReview({
   route: { companyId },
 });
-
-  const { data, isLoading, error: companyError } = useGetCompanyInfo({ route: { companyId } });
 
   const errorMessage = (() => {
     if (!error) return null;
@@ -216,8 +232,9 @@ const CompanyProfile = () => {
     setReportComment('');
     setReportingReviewId(null);
   };
-
-  const displayedReviews = (data?.data ?? [])
+  const company = companyData?.data;
+  
+  const displayedReviews = (reviewData?.data ?? [])
   .map(review => ({
     rating: review.overall_rating,
     text: review.body,
@@ -247,12 +264,16 @@ const CompanyProfile = () => {
         {/* Profile Info Header Placement */}
         <div className="bg-white rounded-2xl shadow-sm border border-custom-border p-6 mb-8">
           <ProfileHeader
-            img={companyProfile}
-            name={dummyData.name}
-            description={dummyData.description}
-            location={dummyData.location}
-            onReview={() => setIsModalOpen(true)}
-          />
+  img={companyProfile}
+  name={company?.name ?? 'Company'}
+  description={company?.description ?? ''}
+  location={
+    company?.locations?.find(location => location.is_headquarters)?.address ??
+    company?.locations?.[0]?.address ??
+    ''
+  }
+  onReview={() => setIsModalOpen(true)}
+/>
         </div>
 
         {/* Master Responsive Grid (2 Columns on Large Screens) */}
@@ -283,7 +304,7 @@ const CompanyProfile = () => {
               <h3 className="text-text-primary pb-3 font-semibold text-xl border-b border-custom-border mb-4">
                 Summary
               </h3>
-              <p className="text-text-secondary text-sm leading-relaxed">{dummyData.summary}</p>
+              <p className="text-text-secondary text-sm leading-relaxed"> {company?.description ?? 'No company description available yet.'} </p>
             </div>
 
             {/* Reviews Workspace Module */}
@@ -488,7 +509,7 @@ const CompanyProfile = () => {
               </div>
               <div className="flex justify-between text-sm">
                 <p className="text-text-secondary">Status</p>
-                {dummyData.organizationDetails.active ? (
+                {company?.status === 'APPROVED' ? (
                   <p className="text-[#0F973D] font-medium bg-green-50 px-2 py-0.5 rounded text-xs">
                     Active
                   </p>
@@ -499,7 +520,7 @@ const CompanyProfile = () => {
               <div className="flex justify-between text-sm">
                 <p className="text-text-secondary">Industry</p>
                 <p className="text-text-primary font-medium capitalize">
-                  {dummyData.organizationDetails.industry}
+                  {company?.industry ?? 'Not specified'}
                 </p>
               </div>
               <div className="flex justify-between text-sm gap-2">
@@ -518,7 +539,9 @@ const CompanyProfile = () => {
               <div>
                 <p className="text-text-primary text-sm font-medium">Head Office</p>
                 <p className="text-xs text-text-secondary mt-1 leading-relaxed">
-                  {dummyData.location}
+                  {company?.locations?.find(location => location.is_headquarters)?.address ??
+  company?.locations?.[0]?.address ??
+  'No location available'}
                 </p>
               </div>
             </div>
