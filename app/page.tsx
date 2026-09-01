@@ -3,12 +3,16 @@
 
 // Importing the necessary modules
 import Image from 'next/image';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import Navbar from '@/components/navbar/navbar';
 import Footer from '@/components/footer/footer';
 import Reviews from '@/components/reviews/reviews';
 import searchLogo from '@/images/home/search-logo.png';
 import textLogo from '@/images/home/home-text-logo.jpg';
+
+import debounce from 'lodash.debounce';
+import { CreateGetQueryHook } from '@/src/api/hooks/useGet';
+import { useRouter } from 'next/navigation';
 
 // Importing the frequently asked questions objects
 import companyInformation from '@/components/frequentlyAskedQuetions/companyInformation';
@@ -18,13 +22,45 @@ import reviewAndRatings from '@/components/frequentlyAskedQuetions/reviewAndrati
 
 // Importing the faq loader
 import FaqLoader from '@/components/faqLoader/faqLoader';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 // Creating the home component
 const Home = () => {
   // Setting the state
   const [faqActiveMenu, setFaqActiveMenu] = useState('home');
+
+  const [searchValue, setSearchValue] = useState('');
+const [debouncedQuery, setDebouncedQuery] = useState('');
+const router = useRouter();
+
+  const debouncedUpdate = useMemo(
+  () =>
+    debounce((value: string) => {
+      setDebouncedQuery(value);
+    }, 500),
+  []
+);
+
+  React.useEffect(() => {
+  return () => {
+    debouncedUpdate.cancel();
+  };
+}, [debouncedUpdate]);
+
+  const useCompanySearch = CreateGetQueryHook<any>({
+  endpoint: '/companies/typeahead',
+  queryKey: ['landing-company-search'],
+  options: {
+    retry: false,
+    enabled: debouncedQuery.trim().length > 0,
+  },
+});
+
+const { data: searchResults, isPending: isSearching } = useCompanySearch({
+  query: { q: debouncedQuery },
+});
+
+const companies = searchResults?.data ?? [];
 
   // Creating a function for rendering the faq questions and answer
   const renderFaqMenu = () => {
@@ -97,22 +133,76 @@ const Home = () => {
             </div>
 
             <div className="w-full lg:flex items-center">
-              {/* Container for the icon and input */}
-              <div className="mr-3.75 flex items-center w-full border border-gray-300 rounded-md px-3 py-4 focus-within:ring-2 focus-within:ring-[#334EAC] focus-within:border-transparent h-12.5">
-                <Image src={searchLogo} alt="Search Logo" width={20} height={20} className="mr-3" />
-                <input
-                  type="search"
-                  placeholder="Search for companies...."
-                  className="w-full outline-none bg-transparent text-gray-700"
-                />
+  <div className="mr-3.75 relative w-full">
+    <div className="flex items-center w-full border border-gray-300 rounded-md px-3 py-4 focus-within:ring-2 focus-within:ring-[#334EAC] focus-within:border-transparent h-12.5">
+      <Image
+        src={searchLogo}
+        alt="Search Logo"
+        width={20}
+        height={20}
+        className="mr-3"
+      />
+
+      <input
+        type="search"
+        placeholder="Search for companies...."
+        className="w-full outline-none bg-transparent text-gray-700"
+        value={searchValue}
+        onChange={e => {
+          setSearchValue(e.target.value);
+          debouncedUpdate(e.target.value);
+        }}
+      />
+    </div>
+
+    {searchValue.trim() && (
+      <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+        {isSearching ? (
+          <div className="flex items-center justify-center py-6">
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#334eac] border-t-transparent" />
+          </div>
+        ) : companies.length > 0 ? (
+          companies.map((company: any) => (
+            <button
+              key={company.id}
+              type="button"
+              onClick={() => router.push(`/search-company/${company.id}`)}
+              className="block w-full text-left px-4 py-3 hover:bg-gray-100 transition-colors border-b last:border-b-0"
+            >
+              <div className="font-medium text-gray-900">
+                {company.name}
               </div>
-              <div className="mt-3.75 lg:mt-0">
-                <button className="md:w-[40%] w-full lg:w-auto text-[white] h-12.5 text-[15px] bg-[#334EAC] pl-7.5 pr-7.5 rounded-[5px] hover:bg-[#1e2e6b] transition-colors duration-1000 ease-in-out">
-                  {' '}
-                  Search{' '}
-                </button>
-              </div>
-            </div>
+
+              {company.industry && (
+                <div className="text-sm text-gray-500">
+                  {company.industry}
+                </div>
+              )}
+            </button>
+          ))
+        ) : (
+          <div className="py-6 text-center text-sm text-gray-500">
+            No companies found
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+
+  <div className="mt-3.75 lg:mt-0">
+    <button
+      type="button"
+      onClick={() => {
+        if (companies.length > 0) {
+          router.push(`/search-company/${companies[0].id}`);
+        }
+      }}
+      className="md:w-[40%] w-full lg:w-auto text-[white] h-12.5 text-[15px] bg-[#334EAC] pl-7.5 pr-7.5 rounded-[5px] hover:bg-[#1e2e6b] transition-colors duration-1000 ease-in-out"
+    >
+      Search
+    </button>
+  </div>
+</div>
           </div>
         </section>
 
