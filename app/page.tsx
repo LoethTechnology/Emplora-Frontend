@@ -181,8 +181,22 @@ const companies = searchResults?.data ?? [];
             </button>
           ))
         ) : (
-          <div className="py-6 text-center text-sm text-gray-500">
-            No companies found
+          <div className="py-6 text-center">
+            <div className="text-sm text-gray-500">
+              No companies found
+            </div>
+
+            <div className="mt-2 text-sm text-gray-600">
+              Can't find the company you're looking for?
+            </div>
+
+            <button
+              type="button"
+              onClick={() => router.push('/create-company')}
+              className="mt-3 text-sm font-medium text-[#334EAC] hover:underline"
+            >
+              Create a company profile
+            </button>
           </div>
         )}
       </div>
