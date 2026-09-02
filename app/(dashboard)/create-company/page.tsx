@@ -1,6 +1,7 @@
 'use client';
 
 import { Fragment, useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -285,11 +286,14 @@ const CreateCompany = () => {
     };
   }, [logoPreviewUrl]);
 
-  const useCreateCompany = CreatePostMutationHook({
-    endpoint: '/companies',
-    requiresAuth: true,
-  });
-  const { mutateAsync: createCompany } = useCreateCompany();
+const router = useRouter();
+
+const useCreateCompany = CreatePostMutationHook({
+  endpoint: '/companies',
+  requiresAuth: true,
+});
+
+const { mutateAsync: createCompany } = useCreateCompany();
 
   const onSubmit = async (data: CreateCompanyInput) => {
     setError('');
@@ -306,12 +310,20 @@ const CreateCompany = () => {
       if (logoFile) {
         formData.append('logo', logoFile);
       }
-      await createCompany(formData as unknown as CreateCompanyInput);
+      const response = await createCompany(formData as unknown as CreateCompanyInput);
 
-      reset();
-      removeLogo();
-      setError('');
-      setSuccess('Company profile created successfully.');
+reset();
+removeLogo();
+setError('');
+
+const companyId = response?.data?.id;
+
+if (companyId) {
+  router.push(`/search-company/${companyId}`);
+  return;
+}
+
+setSuccess('Company profile created successfully.');
 
       if (successTimeoutRef.current) {
         window.clearTimeout(successTimeoutRef.current);
