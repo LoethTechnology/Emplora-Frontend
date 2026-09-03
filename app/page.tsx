@@ -24,10 +24,36 @@ import reviewAndRatings from '@/components/frequentlyAskedQuetions/reviewAndrati
 import FaqLoader from '@/components/faqLoader/faqLoader';
 import Link from 'next/link';
 
+type RecentReview = {
+  id: string;
+  body: string;
+  overall_rating: number;
+  published_at: string;
+  company: {
+    id: string;
+    name: string;
+    logo_url: string | null;
+  };
+};
+
+type RecentReviewsResponse = RecentReview[];
+
 // Creating the home component
 const Home = () => {
   // Setting the state
   const [faqActiveMenu, setFaqActiveMenu] = useState('home');
+
+  const GetRecentReviews = CreateGetQueryHook<RecentReviewsResponse>({
+  endpoint: '/reviews/recent',
+  queryKey: ['recent-reviews'],
+  requiresAuth: false,
+});
+
+const { data: recentReviews = [] } = GetRecentReviews({
+  query: {
+    limit: 6,
+  },
+});
 
   const [searchValue, setSearchValue] = useState('');
 const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -276,9 +302,9 @@ const companies = searchResults?.data ?? [];
         <section className="m-auto w-[90%] mt-6.25 px-4 md:px-12.5 py-10 overflow-hidden flex flex-nowrap gap-6 scrollbar-hide snap-x snap-mandatory">
           <div className="flex animate-slide gap-5">
             {/* First set */}
-            {[...Array(6)].map((_, i) => (
-              <div key={`a-${i}`} className="shrink-0 w-75">
-                <Reviews />
+            {recentReviews.map(review => (
+              <div key={review.id} className="shrink-0 w-75">
+                <Reviews review={review} />
               </div>
             ))}
           </div>
