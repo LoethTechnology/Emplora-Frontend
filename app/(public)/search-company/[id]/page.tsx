@@ -148,8 +148,13 @@ const CompanyProfile = () => {
 
   const companyId = params.id as string;
 
-  const useCreateReview = CreatePostMutationHook<CreateReviewPayload>({
+const useCreateReview = CreatePostMutationHook<CreateReviewPayload>({
   endpoint: '/companies/:companyId/reviews',
+  onSuccess: (_data, queryClient) => {
+    queryClient.invalidateQueries({
+      queryKey: ['company-reviews'],
+    });
+  },
 });
 
 const useGetCompanyInfo = CreateGetQueryHook<CompanyApiResponse>({
