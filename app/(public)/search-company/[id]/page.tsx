@@ -203,22 +203,38 @@ const { data: reviewData, isLoading: isReviewsLoading } = useGetCompanyReviews({
   const [reportingReviewId, setReportingReviewId] = useState<number | null>(null);
 
   // --- COMPONENT HANDLERS ---
-  const handleReviewSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleReviewSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
 
-    const ratingValues = Object.values(ratings).filter(r => r > 0);
+  const ratingValues = Object.values(ratings).filter(r => r > 0);
 
-    const overallRating = Math.round(
-      ratingValues.reduce((sum, rating) => sum + rating, 0) / ratingValues.length
-    );
+  const overallRating = Math.round(
+    ratingValues.reduce((sum, rating) => sum + rating, 0) / ratingValues.length
+  );
 
-    createReview({
-  body: reviewText,
-  overall_rating: overallRating,
-  employment_context: '',
-  would_recommend: true,
-});
-  };
+  createReview(
+    {
+      body: reviewText,
+      overall_rating: overallRating,
+      employment_context: '',
+      would_recommend: true,
+    },
+    {
+      onSuccess: () => {
+        setIsModalOpen(false);
+
+        setReviewText('');
+
+        setRatings({
+          workEnvironment: 0,
+          salaryBenefits: 0,
+          management: 0,
+          careerGrowth: 0,
+        });
+      },
+    }
+  );
+};
 
   const handleReportSubmit = (e: React.FormEvent) => {
     e.preventDefault();
