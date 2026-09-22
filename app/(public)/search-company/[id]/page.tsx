@@ -65,6 +65,7 @@ type ReviewApiResponse = {
   totalPages: number;
   hasNextPage: boolean;
   hasPrevPage: boolean;
+  averageRating: number;
 };
 
 type CompanyApiResponse = {
@@ -254,6 +255,8 @@ const handleReviewSubmit = (e: React.FormEvent) => {
     setReportingReviewId(null);
   };
   const company = companyData?.data;
+
+  const averageRating = reviewData?.averageRating ?? 0;
   
   const displayedReviews = (reviewData?.data ?? [])
   .map(review => ({
@@ -315,7 +318,7 @@ const handleReviewSubmit = (e: React.FormEvent) => {
               />
               <TopCards
                 title="Ratings"
-                count={dummyData.rating}
+                count={averageRating}
                 icon={<Star size={24} className="text-[#FACC15]" />}
               />
             </div>
