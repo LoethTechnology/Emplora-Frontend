@@ -306,22 +306,19 @@ const handleReviewSubmit = (e: React.FormEvent) => {
           <div className="lg:col-span-2 flex flex-col gap-8">
             {/* Top Cards Section */}
             <div className="flex flex-wrap gap-4 w-full">
-              <TopCards
-                title="Employees"
-                count={dummyData.employees}
-                icon={<UsersRound size={24} className="text-[#0F973D]" />}
-              />
-              <TopCards
-                title="Comments"
-                count={dummyData.commentCount}
-                icon={<MessageCircleMore size={24} className="text-[#1671D9]" />}
-              />
-              <TopCards
-                title="Ratings"
-                count={averageRating}
-                icon={<Star size={24} className="text-[#FACC15]" />}
-              />
-            </div>
+              <div className="flex flex-wrap gap-4 w-full">
+  <TopCards
+    title="Reviews"
+    count={reviewData?.totalCount ?? 0}
+    icon={<MessageCircleMore size={24} className="text-[#1671D9]" />}
+  />
+
+  <TopCards
+    title="Ratings"
+    count={averageRating}
+    icon={<Star size={24} className="text-[#FACC15]" />}
+  />
+</div>
 
             {/* Structured Page Sections */}
             <div className="border border-custom-border rounded-2xl p-6 bg-white">
