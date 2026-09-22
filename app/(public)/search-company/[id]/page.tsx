@@ -305,8 +305,7 @@ const handleReviewSubmit = (e: React.FormEvent) => {
           {/* LEFT SIDE: Core Content (Takes 2 columns out of 3) */}
           <div className="lg:col-span-2 flex flex-col gap-8">
             {/* Top Cards Section */}
-            <div className="flex flex-wrap gap-4 w-full">
-              <div className="flex flex-wrap gap-4 w-full">
+<div className="flex flex-wrap gap-4 w-full">
   <TopCards
     title="Reviews"
     count={reviewData?.totalCount ?? 0}
