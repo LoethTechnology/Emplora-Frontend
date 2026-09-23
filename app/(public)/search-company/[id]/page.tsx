@@ -81,50 +81,6 @@ export type ReviewCategory =
 
 type SortOrder = 'asc' | 'desc';
 
-const dummyData = {
-  name: 'TechNova Solutions',
-  description: 'Driving Innovation Through Technology',
-  location: 'Garki, Abuja Nigeria',
-  img: '',
-  summary:
-    'TechNova Solutions is a technology-driven company that provides innovative digital solutions to help businesses grow and operate more efficiently. The company specializes in areas such as software development, IT consulting, cloud services, and data-driven technologies, enabling organizations to navigate digital transformation and stay competitive',
-  reviews: [
-    {
-      rating: 5.0,
-      text: 'Absolutely love this product! The quality exceeded my expectations and the customer service was outstanding. Would definitely recommend to anyone looking for a reliable solution.',
-      date: '2026-04-28',
-      upVoteCount: 24,
-      downVoteCount: 1,
-      commentCount: 3,
-      categories: ['salary-benefits', 'work-Environment'],
-    },
-    {
-      rating: 4.5,
-      text: 'Great experience overall. The interface is intuitive and the features are exactly what I needed. Only minor issue was the delivery took a day longer than expected.',
-      date: '2026-04-25',
-      upVoteCount: 18,
-      downVoteCount: 2,
-      commentCount: 5,
-      categories: ['salary-benefits', 'career-growth'],
-    },
-  ],
-  employees: 10,
-  commentCount: 20,
-  rating: 3.8,
-  organizationDetails: {
-    email: 'technova@gmail.com',
-    yearFounded: 2005,
-    active: true,
-    industry: 'tech',
-    Founders: ['Mr Yusuf Jibril', 'Mrs Aisha Jibril'],
-  },
-  latestJobs: [
-    { title: 'Frontend_Developer', type: 'Remote', nature: 'Full_Time' },
-    { title: 'Backend_Developer', type: 'Hybrid', nature: 'Full_Time' },
-    { title: 'IT_Specialist', type: 'Remote', nature: 'Contract' },
-  ],
-};
-
 const REVIEW_CATEGORIES: { value: ReviewCategory; label: string }[] = [
   { value: 'all', label: 'All' },
   { value: 'salary-benefits', label: 'Salary & Benefits' },
@@ -484,31 +440,7 @@ const handleReviewSubmit = (e: React.FormEvent) => {
           </div>
 
           {/* RIGHT SIDE: Info Side panels (Takes 1 column out of 3) */}
-          <div className="flex flex-col gap-6 lg:sticky lg:top-6">
-            {/* Latest Jobs Card */}
-            <div className="border border-custom-border rounded-2xl py-5 px-4 bg-white shadow-sm">
-              <p className="text-text-primary font-semibold pb-3 border-b border-custom-border mb-3">
-                Latest Jobs
-              </p>
-              <div className="flex flex-col gap-3">
-                {dummyData.latestJobs.map(job => (
-                  <div
-                    className="py-2 first:pt-0 last:pb-0 border-b border-dashed border-custom-border last:border-none"
-                    key={job.title}
-                  >
-                    <div className="flex w-full justify-between items-center font-medium text-sm text-text-primary">
-                      <p>{job.title.replaceAll('_', ' ')}</p>
-                      <p className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                        {job.nature.replaceAll('_', ' ')}
-                      </p>
-                    </div>
-                    <p className="text-xs text-text-secondary mt-1">
-                      {job.type.replaceAll('_', ' ')}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            
 
             {/* Organization Info Details Card */}
 <div className="border border-custom-border rounded-2xl py-5 px-4 bg-white shadow-sm flex flex-col gap-3.5">
