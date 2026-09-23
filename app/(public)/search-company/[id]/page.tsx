@@ -71,7 +71,7 @@ type CompanyApiResponse = {
   data: Company;
 };
 
-type SortOrder = 'asc' | 'desc';
+type SortOrder = 'latest' | 'oldest';
 
 const TopCards = ({ icon, title, count }: { icon: ReactNode; title: string; count: number }) => (
   <div className="flex flex-col gap-2 border border-custom-border rounded-2xl p-5 flex-1 min-w-30">
@@ -82,7 +82,7 @@ const TopCards = ({ icon, title, count }: { icon: ReactNode; title: string; coun
 );
 
 const CompanyProfile = () => {
-  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('latest');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const params = useParams();
 
@@ -197,14 +197,17 @@ const handleReviewSubmit = (e: React.FormEvent) => {
 
   const averageRating = reviewData?.averageRating ?? 0;
   
-  const displayedReviews = (reviewData?.data ?? [])
+const displayedReviews = (reviewData?.data ?? [])
   .map(review => ({
     rating: review.overall_rating,
     text: review.body,
     date: review.published_at?.split('T')[0] ?? review.created_at?.split('T')[0] ?? '',
+    publishedAt: review.published_at ?? review.created_at,
   }))
   .sort((a, b) =>
-    sortOrder === 'desc' ? b.rating - a.rating : a.rating - b.rating
+    sortOrder === 'latest'
+      ? new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      : new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
   );
 
   return (
@@ -370,10 +373,12 @@ const handleReviewSubmit = (e: React.FormEvent) => {
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem onSelect={() => setSortOrder('desc')}>
-                        DESC
+                      <DropdownMenuItem onSelect={() => setSortOrder('latest')}>
+                        Latest
                       </DropdownMenuItem>
-                      <DropdownMenuItem onSelect={() => setSortOrder('asc')}>ASC</DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => setSortOrder('oldest')}>
+                        Oldest
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
