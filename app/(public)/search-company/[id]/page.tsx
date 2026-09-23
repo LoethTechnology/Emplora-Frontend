@@ -7,7 +7,6 @@ import companyProfile from '@/images/company/companyProfile.png';
 import BackButton from '@/components/buttons/BackBtn';
 import FavoriteBtn from '@/components/buttons/FavoriteBtn';
 import ProfileHeader from '../../../../components/searchCompany/ProfileHeader';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ReactNode } from 'react';
 import { ChevronDown, MessageCircleMore, Star, UsersRound, Plus } from 'lucide-react';
 import ReviewCard from '../../../../components/searchCompany/ReviewCard';
@@ -72,22 +71,7 @@ type CompanyApiResponse = {
   data: Company;
 };
 
-export type ReviewCategory =
-  | 'all'
-  | 'salary-benefits'
-  | 'work-Environment'
-  | 'career-growth'
-  | 'management';
-
 type SortOrder = 'asc' | 'desc';
-
-const REVIEW_CATEGORIES: { value: ReviewCategory; label: string }[] = [
-  { value: 'all', label: 'All' },
-  { value: 'salary-benefits', label: 'Salary & Benefits' },
-  { value: 'work-Environment', label: 'Work Environment' },
-  { value: 'management', label: 'Management' },
-  { value: 'career-growth', label: 'Career Growth' },
-];
 
 const TopCards = ({ icon, title, count }: { icon: ReactNode; title: string; count: number }) => (
   <div className="flex flex-col gap-2 border border-custom-border rounded-2xl p-5 flex-1 min-w-30">
@@ -98,7 +82,6 @@ const TopCards = ({ icon, title, count }: { icon: ReactNode; title: string; coun
 );
 
 const CompanyProfile = () => {
-  const [activeCategory, setActiveCategory] = useState<ReviewCategory>('all');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const params = useParams();
