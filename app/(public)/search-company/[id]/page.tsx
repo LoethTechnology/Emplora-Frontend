@@ -440,6 +440,7 @@ const handleReviewSubmit = (e: React.FormEvent) => {
           </div>
 
           {/* RIGHT SIDE: Info Side panels (Takes 1 column out of 3) */}
+          <div className="flex flex-col gap-6 lg:sticky lg:top-6">
             
 
             {/* Organization Info Details Card */}
