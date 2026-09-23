@@ -511,45 +511,29 @@ const handleReviewSubmit = (e: React.FormEvent) => {
             </div>
 
             {/* Organization Info Details Card */}
-            <div className="border border-custom-border rounded-2xl py-5 px-4 bg-white shadow-sm flex flex-col gap-3.5">
-              <p className="text-text-primary font-semibold pb-1 border-b border-custom-border">
-                Organization Details
-              </p>
-              <div className="flex justify-between text-sm">
-                <p className="text-text-secondary">Email</p>
-                <p className="text-text-primary font-medium">
-                  {dummyData.organizationDetails.email}
-                </p>
-              </div>
-              <div className="flex justify-between text-sm">
-                <p className="text-text-secondary">Year Founded</p>
-                <p className="text-text-primary font-medium">
-                  {dummyData.organizationDetails.yearFounded}
-                </p>
-              </div>
-              <div className="flex justify-between text-sm">
-                <p className="text-text-secondary">Status</p>
-                {company?.status === 'APPROVED' ? (
-                  <p className="text-[#0F973D] font-medium bg-green-50 px-2 py-0.5 rounded text-xs">
-                    Active
-                  </p>
-                ) : (
-                  <p className="text-text-secondary text-xs">Inactive</p>
-                )}
-              </div>
-              <div className="flex justify-between text-sm">
-                <p className="text-text-secondary">Industry</p>
-                <p className="text-text-primary font-medium capitalize">
-                  {company?.industry ?? 'Not specified'}
-                </p>
-              </div>
-              <div className="flex justify-between text-sm gap-2">
-                <p className="text-text-secondary">Founders</p>
-                <div className="text-right text-text-primary font-medium">
-                  {dummyData.organizationDetails.Founders.join(', ')}
-                </div>
-              </div>
-            </div>
+<div className="border border-custom-border rounded-2xl py-5 px-4 bg-white shadow-sm flex flex-col gap-3.5">
+  <p className="text-text-primary font-semibold pb-1 border-b border-custom-border">
+    Organization Details
+  </p>
+
+  <div className="flex justify-between text-sm">
+    <p className="text-text-secondary">Status</p>
+    {company?.status === 'APPROVED' ? (
+      <p className="text-[#0F973D] font-medium bg-green-50 px-2 py-0.5 rounded text-xs">
+        Active
+      </p>
+    ) : (
+      <p className="text-text-secondary text-xs">Inactive</p>
+    )}
+  </div>
+
+  <div className="flex justify-between text-sm">
+    <p className="text-text-secondary">Industry</p>
+    <p className="text-text-primary font-medium capitalize">
+      {company?.industry ?? 'Not specified'}
+    </p>
+  </div>
+</div>
 
             {/* Locations Address Card */}
             <div className="border border-custom-border rounded-2xl py-5 px-4 bg-white shadow-sm">
