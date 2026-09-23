@@ -396,25 +396,6 @@ const handleReviewSubmit = (e: React.FormEvent) => {
                 </div>
               </div>
 
-              {/* Category Filter Tabs */}
-              <Tabs
-                value={activeCategory}
-                onValueChange={val => setActiveCategory(val as ReviewCategory)}
-                className="w-full mb-6"
-              >
-                <TabsList className="flex flex-wrap gap-2 h-auto p-1 bg-neutral-50 border border-custom-border rounded-lg justify-start w-full">
-                  {REVIEW_CATEGORIES.map(category => (
-                    <TabsTrigger
-                      key={category.value}
-                      value={category.value}
-                      className="data-[state=active]:bg-primary data-[state=active]:text-white text-text-secondary text-xs px-3 py-1.5 rounded-md transition-all cursor-pointer"
-                    >
-                      {category.label}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
-
               {/* Active Reviews Loop List */}
               <div className="flex flex-col gap-4">
                 {displayedReviews.length > 0 ? (
