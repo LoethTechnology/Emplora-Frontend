@@ -32,6 +32,7 @@ import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
 import { Button } from '@/components/ui/button';
 import { CreateGetQueryHook } from '@/src/api/hooks/useGet';
 import { Company } from '@/src/types/company.types';
+import { useAuthStore } from '@/store/auth.store';
 
 type CreateReviewPayload = {
   body: string;
@@ -82,9 +83,11 @@ const TopCards = ({ icon, title, count }: { icon: ReactNode; title: string; coun
 );
 
 const CompanyProfile = () => {
-  const [sortOrder, setSortOrder] = useState<SortOrder>('latest');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const params = useParams();
+const [sortOrder, setSortOrder] = useState<SortOrder>('latest');
+const [isModalOpen, setIsModalOpen] = useState(false);
+const params = useParams();
+
+const isAuthenticated = useAuthStore(state => state.isAuthenticated);
 
   const companyId = params.id as string;
 
@@ -153,6 +156,11 @@ const handleReviewSubmit = (e: React.FormEvent) => {
   e.preventDefault();
 
   setReviewError('');
+
+  if (!isAuthenticated) {
+  setReviewError('Please sign in or create an account to submit a review.');
+  return;
+}
 
   const ratingValues = Object.values(ratings).filter(r => r > 0);
 
