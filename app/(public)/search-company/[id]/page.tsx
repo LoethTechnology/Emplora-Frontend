@@ -140,6 +140,7 @@ const { data: reviewData, isLoading: isReviewsLoading } = useGetCompanyReviews({
     careerGrowth: 0,
   });
   const [reviewText, setReviewText] = useState('');
+  const [reviewError, setReviewError] = useState('');
 
   // --- REPORT MODAL STATES ---
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -151,7 +152,14 @@ const { data: reviewData, isLoading: isReviewsLoading } = useGetCompanyReviews({
 const handleReviewSubmit = (e: React.FormEvent) => {
   e.preventDefault();
 
+  setReviewError('');
+
   const ratingValues = Object.values(ratings).filter(r => r > 0);
+
+  if (ratingValues.length === 0) {
+    setReviewError('Please select a rating before submitting your review.');
+    return;
+  }
 
   const overallRating = Math.round(
     ratingValues.reduce((sum, rating) => sum + rating, 0) / ratingValues.length
@@ -349,6 +357,9 @@ const displayedReviews = (reviewData?.data ?? [])
                         </div>
 
                         <div className="w-full pt-2">
+                          {reviewError && (
+                              <p className="text-sm text-red-500">{reviewError}</p>
+                            )}
                           <Button
                             type="submit"
                             disabled={isPending}
