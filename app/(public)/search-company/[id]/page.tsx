@@ -24,8 +24,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogFooter,
 } from '@/components/ui/dialog';
 import ReportModal from '@/components/searchCompany/ReportModal';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
@@ -85,6 +83,7 @@ const TopCards = ({ icon, title, count }: { icon: ReactNode; title: string; coun
 const CompanyProfile = () => {
 const [sortOrder, setSortOrder] = useState<SortOrder>('latest');
 const [isModalOpen, setIsModalOpen] = useState(false);
+const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
 const params = useParams();
 
 const isAuthenticated = useAuthStore(state => state.isAuthenticated);
@@ -158,7 +157,7 @@ const handleReviewSubmit = (e: React.FormEvent) => {
   setReviewError('');
 
   if (!isAuthenticated) {
-  setReviewError('Please sign in or create an account to submit a review.');
+  setIsAuthDialogOpen(true);
   return;
 }
 
@@ -382,6 +381,38 @@ const displayedReviews = (reviewData?.data ?? [])
                       </form>
                     </DialogContent>
                   </Dialog>
+
+                  <Dialog open={isAuthDialogOpen} onOpenChange={setIsAuthDialogOpen}>
+  <DialogContent className="sm:max-w-md bg-white rounded-xl">
+    <DialogHeader>
+      <DialogTitle className="text-xl font-semibold text-text-primary">
+        Sign in to submit your review
+      </DialogTitle>
+      <DialogDescription className="text-sm text-text-secondary">
+        You need to be signed in to your Emplora account to leave a review.
+      </DialogDescription>
+    </DialogHeader>
+
+    <div className="flex gap-3 mt-4">
+      <Button
+        type="button"
+        className="flex-1"
+        onClick={() => window.location.href = '/signin'}
+      >
+        Sign In
+      </Button>
+
+      <Button
+        type="button"
+        variant="outline"
+        className="flex-1"
+        onClick={() => window.location.href = '/register'}
+      >
+        Create Account
+      </Button>
+    </div>
+  </DialogContent>
+</Dialog>
 
                   {/* Filter Dropdown */}
                   <DropdownMenu>
