@@ -5,7 +5,7 @@
 import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import signinLogo from '@/images/signin/signinLogo.jpg';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
 import { useUserStore } from '@/store/user.store';
@@ -16,6 +16,8 @@ import AxiosInstance from '@/src/api/configs';
 const Signin = () => {
   // Setting some necessary state
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -81,7 +83,7 @@ const Signin = () => {
         console.error('Failed to fetch current user after login', err);
       }
 
-      router.push('/');
+      router.push(redirect || '/');
     } catch (error) {
       setFormError('Sign in failed. Please try again.');
     } finally {
