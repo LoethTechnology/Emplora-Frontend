@@ -397,7 +397,9 @@ const displayedReviews = (reviewData?.data ?? [])
       <Button
         type="button"
         className="flex-1"
-        onClick={() => window.location.href = '/signin'}
+        onClick={() =>
+  window.location.href = `/signin?redirect=/search-company/${companyId}`
+}
       >
         Sign In
       </Button>
@@ -406,7 +408,9 @@ const displayedReviews = (reviewData?.data ?? [])
         type="button"
         variant="outline"
         className="flex-1"
-        onClick={() => window.location.href = '/register'}
+        onClick={() =>
+  window.location.href = `/register?redirect=/search-company/${companyId}`
+}
       >
         Create Account
       </Button>
