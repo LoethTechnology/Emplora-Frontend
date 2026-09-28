@@ -13,6 +13,22 @@ import searchCompanyLogo from '@/images/searchCompany/searchCompanyLogo.png';
 import debounce from 'lodash.debounce';
 import { CreateGetQueryHook } from '@/src/api/hooks/useGet';
 
+type CompaniesResponse = {
+  data: {
+    id: string;
+    name: string;
+    industry: string | null;
+    logo_url: string | null;
+  }[];
+  totalCount: number;
+  limit: number;
+  currentCount: number;
+  page: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+};
+
 // Creating the search company component
 const SearchCompany = () => {
   // Setting the state for locations input
@@ -21,35 +37,7 @@ const SearchCompany = () => {
   const [value, setValue] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
-  //
-  const companies = [
-    {
-      name: 'Tech Company 1',
-      industry: 'Technology',
-      logo: '',
-      id: '1',
-    },
-    {
-      name: 'Finance Company 1',
-      industry: 'Finance',
-      logo: '',
-      id: '2',
-    },
-    {
-      name: 'Healthcare Company 1',
-      industry: 'Healthcare',
-      logo: '',
-      id: '3',
-    },
-    {
-      name: 'Tech Company 1',
-      industry: 'Technology',
-      logo: '',
-      id: '4',
-    },
-  ];
-
-  // Setting the locations
+    // Setting the locations
   const locations = [
     'Lagos',
     'Abuja',
@@ -86,6 +74,21 @@ const SearchCompany = () => {
       enabled: debouncedQuery.trim().length > 0,
     },
   });
+
+  const useGetCompanies = CreateGetQueryHook<CompaniesResponse>({
+  endpoint: '/companies',
+  queryKey: ['companies'],
+});
+
+const { data: companiesData, isPending: isCompaniesLoading } = useGetCompanies({
+  query: {
+    page: 1,
+    limit: 8,
+    sort: 'desc',
+  },
+});
+
+const companies = companiesData?.data ?? [];
 
   const { data: searchResults, isPending: isSearching } = useSearch({
     query: { q: debouncedQuery },
@@ -267,40 +270,43 @@ const SearchCompany = () => {
             </div>
           </div>
 
-          {/* Most viewed companies */}
-          <div>
-            <div>
-              <h2 className="text-[19px] font-normal sm:text-[18px] lg:text-[18px] mt-7.5 mb-5 text-black">
-                {' '}
-                Most Viewed{' '}
-              </h2>
-            </div>
+          {/* Explore Companies */}
+<div>
+  <div className="flex items-center justify-between mt-7.5 mb-5">
+    <h2 className="text-[18px] font-semibold text-gray-900">
+      Explore Companies
+    </h2>
 
-            {/* Companies display */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
-              {companies.map((company, index) => (
-                // Company card
-                <CompanyCard key={index} companyId={company.id} />
-              ))}
-            </div>
-          </div>
+    {companiesData?.totalCount ? (
+      <span className="text-sm text-gray-500">
+        {companiesData.totalCount} companies
+      </span>
+    ) : null}
+  </div>
 
-          {/* Highest Rated Company */}
-          <div>
-            <div>
-              <h2 className="text-[19px] font-normal sm:text-[18px] lg:text-[18px] mt-7.5 mb-5 text-black">
-                {' '}
-                Highest Rated{' '}
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
-              {companies.map((company, index) => (
-                // Company card
-                <CompanyCard key={index} companyId={company.id} />
-              ))}
-            </div>
-          </div>
+  {isCompaniesLoading ? (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
+      {[...Array(4)].map((_, index) => (
+        <div
+          key={index}
+          className="h-48 rounded-xl border border-gray-200 bg-gray-50 animate-pulse"
+        />
+      ))}
+    </div>
+  ) : companies.length > 0 ? (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
+      {companies.map(company => (
+        <CompanyCard key={company.id} companyId={company.id} />
+      ))}
+    </div>
+  ) : (
+    <div className="py-12 text-center border border-gray-200 rounded-xl">
+      <p className="text-sm text-gray-500">
+        No companies available yet.
+      </p>
+    </div>
+  )}
+</div>
         </section>
       </main>
 
