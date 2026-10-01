@@ -2,17 +2,33 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { Fragment } from 'react';
-import reviewsLogo from "@/images/searchCompany/reviewsLogo.png";
 import companyLogo from "@/images/searchCompany/companyLogo.png";
 import searchCompanyIcon from "@/images/searchCompany/searchCompanyIcon.png";
 
 // Setting the interface for the company card component 
-interface CompanyCardProps {
-    companyId: string;
+interface CompanyLocation {
+    id: string;
+    company_id: string;
+    country: string;
+    address: string;
+    is_headquarters: boolean;
 }
 
-// Creating the company card component 
-const CompanyCard = ({ companyId }: CompanyCardProps) => {
+interface CompanyCardData {
+    id: string;
+    name: string;
+    industry: string | null;
+    logo_url: string | null;
+    locations?: CompanyLocation[];
+    total_reviews?: number;
+    mean_rating?: number;
+}
+
+interface CompanyCardProps {
+    company: CompanyCardData;
+}
+
+const CompanyCard = ({ company }: CompanyCardProps) => {
     // Rendering the jsx component 
     return (
         <Fragment>
@@ -25,19 +41,16 @@ const CompanyCard = ({ companyId }: CompanyCardProps) => {
                 </div>
 
                 <div className="mx-[10px] mt-[20px]">
-                    {/* Adding the company ratings and the reviews */}
-                    <div>
-                        {/* Ratings and Reviews */}
-                        <div className="flex justify-between items-center align-middle gap-1 mb-[10px]">
-                            <Image src={reviewsLogo} alt="Reviews Logo" className="h-[13px] w-[65px]" />
-                            <span className="text-[13px]"> 120 Reviews </span>
-                        </div>
-                    </div>
 
                     {/* Adding the company name and industry type */}
                     <div>
-                        <h3 className="text-[18px] font-bold text-black"> TechNova Solutions </h3>
-                        <p className="text-[12px] text-gray-500"> Driving Innovation through Technology </p>
+                        <h3 className="text-[18px] font-bold text-black">
+                            {company.name}
+                        </h3>
+                        
+                        <p className="text-[12px] text-gray-500">
+                            {company.industry || 'Industry not specified'}
+                        </p>
 
                         <div className="flex items-center gap-1 mt-[6px]">
                             {/* Location Icon  */}
@@ -45,13 +58,17 @@ const CompanyCard = ({ companyId }: CompanyCardProps) => {
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                             </svg>
-                            <span className="text-[12px]"> Garki, Abuja Nigeria &bull; 50 Employees</span>
+                            <span className="text-[12px] text-gray-600">
+                                {company.locations?.find(location => location.is_headquarters)?.address ||
+                                    company.locations?.[0]?.address ||
+                                    'Location not specified'}
+                            </span>
                         </div>
                     </div>
 
                     {/* Adding the company profile button */}
                     <div className="mt-[20px] border-t-[1px] border-[#e7e5e5] pt-[10px] pb-[10px]">
-                        <Link href={`/search-company/${companyId}`}>
+                        <Link href={`/search-company/${company.id}`}>
                             <button className="text-[14px] bg-[#334eac] w-full text-white py-2.5 px-4 rounded-[6px] hover:bg-[#2a3d8c] transition-colors">
                                 View Company Profile
                             </button>
