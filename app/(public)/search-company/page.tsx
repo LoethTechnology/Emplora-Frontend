@@ -13,20 +13,33 @@ import searchCompanyLogo from '@/images/searchCompany/searchCompanyLogo.png';
 import debounce from 'lodash.debounce';
 import { CreateGetQueryHook } from '@/src/api/hooks/useGet';
 
-type CompaniesResponse = {
-  data: {
+type CompanyLocation = {
     id: string;
-    name: string;
-    industry: string | null;
-    logo_url: string | null;
-  }[];
-  totalCount: number;
-  limit: number;
-  currentCount: number;
-  page: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
+    company_id: string;
+    country: string;
+    address: string;
+    is_headquarters: boolean;
+    created_at: string;
+    updated_at: string;
+};
+
+type CompaniesResponse = {
+    data: {
+        id: string;
+        name: string;
+        industry: string | null;
+        logo_url: string | null;
+        locations?: CompanyLocation[];
+        total_reviews?: number;
+        mean_rating?: number;
+    }[];
+    totalCount: number;
+    limit: number;
+    currentCount: number;
+    page: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
 };
 
 // Creating the search company component
@@ -296,8 +309,8 @@ const companies = companiesData?.data ?? [];
   ) : companies.length > 0 ? (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
       {companies.map(company => (
-        <CompanyCard key={company.id} companyId={company.id} />
-      ))}
+    <CompanyCard key={company.id} company={company} />
+    ))}
     </div>
   ) : (
     <div className="py-12 text-center border border-gray-200 rounded-xl">
