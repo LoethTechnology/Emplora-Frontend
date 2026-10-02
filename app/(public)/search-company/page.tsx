@@ -224,32 +224,50 @@ const companies = companiesData?.data ?? [];
                 />
               </div>
               {/* Search Results */}
-              {value.trim() && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
-                  {isSearching ? (
-                    <div className="flex items-center justify-center py-6">
-                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#334eac] border-t-transparent" />
-                    </div>
-                  ) : results.length > 0 ? (
-                    results.map((company: any) => (
-                      <Link
-                        key={company.id}
-                        href={`/search-company/${company.id}`}
-                        className="block px-4 py-3 hover:bg-gray-100 transition-colors border-b last:border-b-0"
-                      >
-                        <div className="font-medium text-gray-900">{company.name}</div>
-
-                        {company.industry && (
-                          <div className="text-sm text-gray-500">{company.industry}</div>
-                        )}
-                      </Link>
-                    ))
-                  ) : (
-                    <div className="py-6 text-center text-sm text-gray-500">No results found</div>
-                  )}
-                </div>
-              )}
-            </div>
+                {value.trim() && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+                    {isSearching ? (
+                      <div className="flex items-center justify-center py-6">
+                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#334eac] border-t-transparent" />
+                      </div>
+                    ) : results.length > 0 ? (
+                      results.map((company: any) => (
+                        <Link
+                          key={company.id}
+                          href={`/search-company/${company.id}`}
+                          className="block px-4 py-3 hover:bg-gray-100 transition-colors border-b last:border-b-0"
+                        >
+                          <div className="font-medium text-gray-900">
+                            {company.name}
+                          </div>
+                
+                          {company.industry && (
+                            <div className="text-sm text-gray-500">
+                              {company.industry}
+                            </div>
+                          )}
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="py-6 text-center">
+                        <p className="text-sm text-gray-500">
+                          No companies found
+                        </p>
+                
+                        <p className="text-sm text-gray-600 mt-2">
+                          Can't find the company you're looking for?
+                        </p>
+                
+                        <Link
+                          href="/create-company"
+                          className="inline-block mt-3 text-sm text-[#334eac] font-medium hover:underline"
+                        >
+                          Create a company profile
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                )}
 
             {/* Filter select tag */}
             <div className="">
