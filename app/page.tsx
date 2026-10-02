@@ -280,13 +280,11 @@ const companies = searchResults?.data ?? [];
 
         {/* Adding the recent reviews section header*/}
         <section className="mt-12 md:mt-31.25">
-          <div className="grid justify-center items-center text-center px-4">
-            {/* Badge Container */}
-            <div className="mb-6">
-              <h1 className="bg-[#ebedf7] text-center w-fit min-w-37.5 md:w-[25%] mx-auto p-3 rounded-[30px] text-[#334eab] text-[15px] border border-[#334eab3b] font-medium">
-                Recent Reviews
-              </h1>
-            </div>
+          <div className="mb-6">
+            <h1 className="bg-[#ebedf7] text-center w-fit mx-auto px-4 py-1.5 rounded-[30px] text-[#334eab] text-[14px] border border-[#334eab3b] font-medium">
+              Recent Reviews
+            </h1>
+          </div>
 
             {/* Main Heading */}
             <div className="max-w-5xl mx-auto">
