@@ -300,6 +300,7 @@ const companies = companiesData?.data ?? [];
               </button>
             </div>
           </div>
+        </div>
 
           {/* Explore Companies */}
 <div>
