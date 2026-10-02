@@ -279,13 +279,13 @@ const companies = searchResults?.data ?? [];
         </section>
 
         {/* Adding the recent reviews section header*/}
-        <section className="mt-12 md:mt-31.25">
-          <div className="mb-6">
-            <h1 className="bg-[#ebedf7] text-center w-fit mx-auto px-4 py-1.5 rounded-[30px] text-[#334eab] text-[14px] border border-[#334eab3b] font-medium">
-              Recent Reviews
-            </h1>
-          </div>
-
+          <section className="mt-12 md:mt-31.25">
+            <div className="mb-6">
+              <h1 className="bg-[#ebedf7] text-center w-fit mx-auto px-4 py-1.5 rounded-[30px] text-[#334eab] text-[14px] border border-[#334eab3b] font-medium">
+                Recent Reviews
+              </h1>
+            </div>
+          
             {/* Main Heading */}
             <div className="max-w-5xl mx-auto">
               <h2 className="text-[26px] md:text-[40px] leading-tight md:leading-11.5 font-medium text-black">
@@ -293,8 +293,7 @@ const companies = searchResults?.data ?? [];
                 and Discover Honest Workplace Experiences
               </h2>
             </div>
-          </div>
-        </section>
+          </section>
 
         {/*  Reviews component display */}
         <section className="m-auto w-[90%] mt-6.25 px-4 md:px-12.5 py-10 overflow-hidden flex flex-nowrap gap-6 scrollbar-hide snap-x snap-mandatory">
