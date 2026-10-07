@@ -73,7 +73,7 @@ const VerifyEmail = () => {
     }
   };
 
-  const handlePaste = (e: React.ClipboardEvent) => {
+  const  = (e: React.ClipboardEvent) => {
     e.preventDefault();
     const digits = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, CODE_LENGTH);
     const updated = [...otp];
@@ -145,7 +145,7 @@ const VerifyEmail = () => {
             </p>
 
             {/* OTP inputs */}
-            <div className="flex justify-center gap-4 mb-8" onPaste={handlePaste}>
+            <div className="flex justify-center gap-2 sm:gap-4 mb-8" onPaste={handlePaste}>
               {otp.map((digit, i) => (
                 <input
                   key={i}
@@ -159,7 +159,7 @@ const VerifyEmail = () => {
                   onChange={e => handleChange(i, e.target.value)}
                   onKeyDown={e => handleKeyDown(i, e)}
                   aria-label={`Digit ${i + 1}`}
-                  className="h-14 w-14 text-center text-xl font-semibold border border-[#e7e5e5] rounded-[6px] outline-none transition-all focus:border-[#334eac] focus:ring-1 focus:ring-[#334eac]"
+                  className="h-12 w-10 sm:h-14 sm:w-14 text-center text-xl font-semibold border border-[#e7e5e5] rounded-[6px] outline-none transition-all focus:border-[#334eac] focus:ring-1 focus:ring-[#334eac]"
                 />
               ))}
             </div>
