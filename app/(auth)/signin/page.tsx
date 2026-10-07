@@ -36,13 +36,15 @@ const Signin = () => {
 
   const { mutateAsync: signIn, isPending } = useSignInUser();
 
-  const handleSignIn = async () => {
-    setIsLoading(true);
-    setFormError(null);
-    if (!email.trim() || !password) {
-      setFormError('Please enter both email and password.');
-      return;
-    }
+    const handleSignIn = async () => {
+      setFormError(null);
+    
+      if (!email.trim() || !password) {
+        setFormError('Please enter both email and password.');
+        return;
+      }
+    
+      setIsLoading(true);
 
     const form = {
       email: email.trim(),
