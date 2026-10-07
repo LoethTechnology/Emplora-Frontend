@@ -73,7 +73,7 @@ const VerifyEmail = () => {
     }
   };
 
-  const  = (e: React.ClipboardEvent) => {
+  const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
     const digits = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, CODE_LENGTH);
     const updated = [...otp];
