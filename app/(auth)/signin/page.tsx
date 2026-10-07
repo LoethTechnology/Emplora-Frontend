@@ -2,6 +2,7 @@
 'use client';
 
 // Importing the necessary modules
+import { AxiosError } from 'axios';
 import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -37,10 +38,10 @@ const Signin = () => {
   const { mutateAsync: signIn, isPending } = useSignInUser();
 
     const handleSignIn = async () => {
-      setFormError(null);
+      (null);
     
       if (!email.trim() || !password) {
-        setFormError('Please enter both email and password.');
+        ('Please enter both email and password.');
         return;
       }
     
@@ -87,8 +88,19 @@ const Signin = () => {
 
       router.push(redirect || '/');
     } catch (error) {
-      setFormError('Sign in failed. Please try again.');
-    } finally {
+        if (error instanceof AxiosError) {
+          const message = error.response?.data?.message;
+      
+          if (message === 'Email not verified.') {
+            router.push(`/verify-email?email=${encodeURIComponent(email.trim())}`);
+            return;
+          }
+      
+          setFormError(message || 'Sign in failed. Please try again.');
+        } else {
+          setFormError('Sign in failed. Please try again.');
+        }
+      } finally {
       setIsLoading(false);
     }
   };
