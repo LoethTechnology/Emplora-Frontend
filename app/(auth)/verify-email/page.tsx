@@ -21,8 +21,26 @@ const VerifyEmail = () => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const email = searchParams.get('email') ?? '';
-  const maskedEmail = email ? email.replace(/(.{2})(.*)(@.*)/, '$1***$3') : 'your email';
+  const emailFromUrl = searchParams.get('email') ?? '';
+  const [email, setEmail] = useState(emailFromUrl);
+  
+  const maskedEmail = email
+    ? email.replace(/(.{2})(.*)(@.*)/, '$1***$3')
+    : 'your email';
+
+  useEffect(() => {
+  if (emailFromUrl) {
+    sessionStorage.setItem('verification_email', emailFromUrl);
+    setEmail(emailFromUrl);
+    return;
+  }
+
+  const savedEmail = sessionStorage.getItem('verification_email');
+
+  if (savedEmail) {
+    setEmail(savedEmail);
+  }
+}, [emailFromUrl]);
 
   const useVerifyEmail = CreatePostMutationHook<VerifyEmailPayload>({
     endpoint: '/auth/verify-email',
@@ -96,6 +114,8 @@ const VerifyEmail = () => {
         email,
         otp: otp.join(''),
       });
+      
+      sessionStorage.removeItem('verification_email');
       setShowModal(true);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
