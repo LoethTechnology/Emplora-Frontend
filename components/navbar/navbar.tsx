@@ -166,7 +166,7 @@ const Navbar = ({ variant = 'default' }) => {
 
           {/* 3. Desktop Buttons */}
           <div className="hidden min-[854px]:flex items-center gap-3">
-            {authStore.isAuthenticated ? (
+            {authStore.isAuthenticated && user ? (
               <>
                 <Button variant={'outline'} onClick={() => router.push('/create-company')}>
                   <PlusIcon color="#727272 " className="size-5" />
@@ -304,7 +304,7 @@ const Navbar = ({ variant = 'default' }) => {
           </nav>
 
           <div className="mt-auto pb-10 flex flex-col gap-4 text-lg font-medium text-gray-700">
-            {authStore.isAuthenticated ? (
+            {authStore.isAuthenticated && user ? (
               <>
                 <Button variant={'outline'} onClick={() => router.push('/create-company')}>
                   <PlusIcon color="#727272 " className="size-5" />
