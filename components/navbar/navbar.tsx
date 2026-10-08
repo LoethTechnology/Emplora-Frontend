@@ -90,7 +90,7 @@ const Navbar = ({ variant = 'default' }) => {
       : `${baseClasses} text-black hover:text-[#334EAC]`;
   };
 
-  const user = useUserStore(state => state.user);
+  const user = authStore.user;
 
   const handleLogoutConfirm = async () => {
     setLoading(true);
@@ -166,7 +166,7 @@ const Navbar = ({ variant = 'default' }) => {
 
           {/* 3. Desktop Buttons */}
           <div className="hidden min-[854px]:flex items-center gap-3">
-            {user ? (
+            {authStore.isAuthenticated ? (
               <>
                 <Button variant={'outline'} onClick={() => router.push('/create-company')}>
                   <PlusIcon color="#727272 " className="size-5" />
@@ -304,7 +304,7 @@ const Navbar = ({ variant = 'default' }) => {
           </nav>
 
           <div className="mt-auto pb-10 flex flex-col gap-4 text-lg font-medium text-gray-700">
-            {user ? (
+            {authStore.isAuthenticated ? (
               <>
                 <Button variant={'outline'} onClick={() => router.push('/create-company')}>
                   <PlusIcon color="#727272 " className="size-5" />
