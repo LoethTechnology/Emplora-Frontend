@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import signinLogo from '@/images/signin/signinLogo.jpg';
 import { CreatePostMutationHook } from '@/src/api/hooks/usePost';
-import { useUserStore } from '@/store/user.store';
 import { AxiosError } from 'axios';
 
 const passwordRequirements = [
@@ -33,7 +32,6 @@ const Register = () => {
   const [agreementsAccepted, setAgreementsAccepted] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const setUser = useUserStore(state => state.setUser);
 
   const useRegisterUser = CreatePostMutationHook({
     endpoint: '/user',
@@ -70,12 +68,6 @@ const Register = () => {
 
     try {
       const response = await createAccount(form);
-      const payload = response?.data ?? response;
-      const user = payload?.data ?? payload;
-
-      if (user) {
-        setUser(user);
-      }
 
       router.push(`/verify-email?email=${encodeURIComponent(email)}`);
     } catch (error: unknown) {
