@@ -20,6 +20,9 @@ const ProfileHeader = ({ img, name, description, location, onReview }: ProfileHe
           <Image
             src={img}
             alt={'Company Image'}
+            width={120}
+            height={120}
+            unoptimized={typeof img === 'string'}
             className="object-cover w-30 h-30 rounded-full shrink-0"
           />
           {/* Text — hidden on mobile, shown on md+ */}
