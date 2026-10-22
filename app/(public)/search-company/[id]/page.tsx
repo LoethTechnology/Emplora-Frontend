@@ -245,7 +245,7 @@ const displayedReviews = (reviewData?.data ?? [])
         {/* Profile Info Header Placement */}
         <div className="bg-white rounded-2xl shadow-sm border border-custom-border p-6 mb-8">
           <ProfileHeader
-  img={companyProfile}
+  img={company?.logo_url || companyProfile}
   name={company?.name ?? 'Company'}
   description={company?.description ?? ''}
   location={

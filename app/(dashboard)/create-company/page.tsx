@@ -375,7 +375,7 @@ setSuccess('Company profile created successfully.');
         </section>
 
         <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
-          <div className="grid gap-10 xl:grid-cols-[1.1fr_0.9fr]">
+          <div className="grid grid-cols-1 gap-10 xl:grid-cols-[1.1fr_0.9fr]">
             <div className="rounded-[32px] bg-[#334EAC] px-8 py-10 text-white shadow-[0_25px_50px_-25px_rgba(51,78,172,0.35)] sm:px-10 sm:py-12">
               <div className="space-y-6">
                 <div className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-white/10">
@@ -534,11 +534,13 @@ setSuccess('Company profile created successfully.');
                 <div className="space-y-2 text-sm font-medium text-[#0F172A]">
                   Logo <span className="font-normal text-[#94A3B8]">(optional)</span>
                   {logoPreviewUrl ? (
-                    <div className="flex items-center gap-3 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFF] px-3">
-                      <div className="flex gap-3 items-center p-3 justify-between w-full">
-                        <div className="flex gap-2 items-center">
-                          <p className="truncate text-sm text-[#0F172A]">{logoFile?.name}</p>
-                          <p className="text-xs text-[#64748B]">
+                    <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFF] px-3">
+                      <div className="flex min-w-0 flex-1 gap-3 items-center p-3 justify-between">
+                        <div className="flex min-w-0 gap-2 items-center">
+                          <p className="min-w-0 truncate text-sm text-[#0F172A]">
+                            {logoFile?.name}
+                          </p>
+                          <p className="shrink-0 text-xs text-[#64748B]">
                             {logoFile && (logoFile.size / 1024).toFixed(0)} KB
                           </p>
                         </div>
@@ -555,7 +557,7 @@ setSuccess('Company profile created successfully.');
                       <button
                         type="button"
                         onClick={removeLogo}
-                        className="text-xs font-medium text-[#DC2626] hover:underline"
+                        className="shrink-0 text-xs font-medium text-[#DC2626] hover:underline"
                       >
                         Remove
                       </button>
